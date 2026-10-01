@@ -10,11 +10,13 @@ A Discourse plugin that adds a **cryptocurrency price ticker** with live prices 
 - 🆓 Prices from the public **CoinGecko** API — no API key required.
 - 📱 Fully responsive; scrolling styles pause on hover.
 
-## Screenshot
+## Screenshots
 
 ![Crypto ticker below the site header](screenshots/header-en.png)
 
 ![Ticker strip](screenshots/ticker-en.png)
+
+![Coin picker — Admin → Plugins → Crypto Ticker](screenshots/picker-en.png)
 
 ## Installation
 

@@ -12,9 +12,9 @@ A Discourse plugin that adds a **cryptocurrency price ticker** with live prices 
 
 ## Screenshot
 
-![Crypto ticker below the site header](screenshots/header.png)
+![Crypto ticker below the site header](screenshots/header-en.png)
 
-![Ticker strip](screenshots/ticker.png)
+![Ticker strip](screenshots/ticker-en.png)
 
 ## Installation
 

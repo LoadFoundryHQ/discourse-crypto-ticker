@@ -12,7 +12,9 @@ A Discourse plugin that adds a **cryptocurrency price ticker** with live prices 
 
 ## Screenshot
 
-> `[ BTC $67,123 +1.23% ]  [ ETH $3,456 -0.45% ]  [ SOL … ]`
+![Crypto ticker below the site header](screenshots/header.png)
+
+![Ticker strip](screenshots/ticker.png)
 
 ## Installation
 

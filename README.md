@@ -70,8 +70,7 @@ managed from the coin picker page.
 
 - Prices are fetched **client-side** from the public CoinGecko API and refreshed every 60 s.
   For high-traffic forums, consider moving the fetch server-side to avoid CoinGecko rate limits.
-- Coin links use the constant `BINANCE_REFERRAL` in the source, e.g.
-  `https://www.binance.com/price/SOL?ref=discourse`.
+- Every coin links to its **Binance** page.
 
 ## License
 

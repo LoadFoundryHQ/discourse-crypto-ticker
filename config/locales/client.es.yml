@@ -1,0 +1,27 @@
+es:
+  js:
+    crypto_ticker:
+      title: "Ticker de precios"
+      aria_label: "Precios de criptomonedas"
+      positions:
+        header: "Debajo de la cabecera"
+        topic_list_top: "Arriba de la lista de temas"
+        topic_list_bottom: "Debajo de la lista de temas"
+        topic_top: "Arriba del tema"
+        topic_bottom: "Al final del tema"
+        sidebar: "Barra lateral izquierda"
+      styles:
+        classic: "Clásico (franja deslizante)"
+        dark: "Oscuro (franja deslizante)"
+        minimal: "Minimalista (plano, se ajusta)"
+        cards: "Tarjetas (cuadrícula estática)"
+      admin:
+        picker_title: "Monedas"
+        title: "Monedas del ticker"
+        help: "Elige las monedas que se muestran en el ticker. Si lo dejas vacío, se muestran automáticamente las 10 principales por capitalización. Solo se pueden añadir monedas listadas en Binance."
+        empty: "Sin monedas seleccionadas — se mostrarán las 10 principales por capitalización."
+        search_placeholder: "Busca una moneda por símbolo o nombre…"
+        results: "Resultados"
+        save: "Guardar"
+        saving: "Guardando…"
+        saved: "¡Guardado! Recarga la página para ver los cambios."

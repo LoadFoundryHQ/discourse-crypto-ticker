@@ -1,0 +1,27 @@
+en:
+  js:
+    crypto_ticker:
+      title: "Crypto Ticker"
+      aria_label: "Cryptocurrency prices"
+      positions:
+        header: "Below the header"
+        topic_list_top: "Above the topic list"
+        topic_list_bottom: "Below the topic list"
+        topic_top: "Top of the topic"
+        topic_bottom: "End of the topic"
+        sidebar: "Left sidebar"
+      styles:
+        classic: "Classic (scrolling strip)"
+        dark: "Dark (scrolling strip)"
+        minimal: "Minimal (flat, wraps)"
+        cards: "Cards (static grid)"
+      admin:
+        picker_title: "Coins"
+        title: "Ticker coins"
+        help: "Choose the coins shown in the ticker. If you leave it empty, the top 10 by market capitalization are shown automatically. Only coins listed on Binance can be added."
+        empty: "No coins selected — the top 10 by market cap will be shown."
+        search_placeholder: "Search a coin by symbol or name…"
+        results: "Results"
+        save: "Save"
+        saving: "Saving…"
+        saved: "Saved! Reload the page to see the changes."

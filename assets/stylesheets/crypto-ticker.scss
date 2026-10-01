@@ -1,0 +1,154 @@
+.crypto-ticker {
+  width: 100%;
+  overflow: hidden;
+  background: var(--secondary);
+  border-bottom: 1px solid var(--primary-low);
+  color: var(--primary);
+  font-size: 13px;
+  line-height: 1;
+  padding: 7px 0;
+}
+
+.crypto-ticker__track {
+  display: inline-flex;
+  align-items: center;
+  gap: 26px;
+  padding-left: 16px;
+  white-space: nowrap;
+}
+
+.crypto-ticker__coin {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.crypto-ticker__sym {
+  font-weight: 700;
+}
+
+.crypto-ticker__price {
+  color: var(--primary-medium);
+  font-variant-numeric: tabular-nums;
+}
+
+.crypto-ticker__chg.up {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.crypto-ticker__chg.down {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+// Marquee only for the scrolling styles.
+.crypto-ticker--classic .crypto-ticker__track,
+.crypto-ticker--dark .crypto-ticker__track {
+  animation: crypto-ticker-marquee 60s linear infinite;
+  will-change: transform;
+}
+
+.crypto-ticker--classic:hover .crypto-ticker__track,
+.crypto-ticker--dark:hover .crypto-ticker__track {
+  animation-play-state: paused;
+}
+
+// Minimal: flat, transparent, wraps to the available width.
+.crypto-ticker--minimal {
+  background: transparent;
+  border-bottom: 0;
+  padding: 10px 0;
+}
+
+.crypto-ticker--minimal .crypto-ticker__track {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  padding: 0 16px;
+  white-space: normal;
+}
+
+// Cards: static grid of rounded cards.
+.crypto-ticker--cards {
+  background: transparent;
+  border-bottom: 0;
+  padding: 12px 16px;
+}
+
+.crypto-ticker--cards .crypto-ticker__track {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  padding-left: 0;
+  white-space: normal;
+}
+
+.crypto-ticker--cards .crypto-ticker__coin {
+  align-items: flex-start;
+  background: var(--secondary);
+  border: 1px solid var(--primary-low);
+  border-radius: 8px;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px;
+}
+
+.crypto-ticker--cards .crypto-ticker__sym {
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  opacity: 0.7;
+}
+
+.crypto-ticker--cards .crypto-ticker__price {
+  color: var(--primary);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+// Dark: exchange-like dark strip.
+.crypto-ticker--dark {
+  background: #0b1220;
+  border-bottom-color: #1f2937;
+  color: #e5e7eb;
+}
+
+.crypto-ticker--dark .crypto-ticker__coin {
+  color: #e5e7eb;
+}
+
+.crypto-ticker--dark .crypto-ticker__price {
+  color: #94a3b8;
+}
+
+// When placed in the sidebar it should blend with it.
+.crypto-ticker--pos-before-sidebar-sections {
+  background: transparent;
+  border-bottom: 0;
+  padding: 0 8px 8px;
+}
+
+.crypto-ticker--pos-before-sidebar-sections .crypto-ticker__track {
+  font-size: 12px;
+}
+
+@keyframes crypto-ticker-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 700px) {
+  .crypto-ticker {
+    font-size: 12px;
+  }
+
+  .crypto-ticker__track {
+    gap: 18px;
+  }
+}

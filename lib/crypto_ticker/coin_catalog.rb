@@ -20,7 +20,14 @@ module CryptoTicker
     end
 
     def catalog
-      Discourse.cache.fetch(CACHE_KEY, expires_in: CACHE_TTL) { build_catalog }
+      cached = Discourse.cache.read(CACHE_KEY)
+      return cached if cached.present?
+
+      # Never cache an empty catalog: a transient upstream failure would keep the
+      # coin picker empty for the whole TTL.
+      built = build_catalog
+      Discourse.cache.write(CACHE_KEY, built, expires_in: CACHE_TTL) if built.present?
+      built
     end
 
     private
@@ -72,7 +79,7 @@ module CryptoTicker
           query: params.presence,
           headers: { "Accept" => "application/json", "User-Agent" => USER_AGENT },
           connect_timeout: 5,
-          read_timeout: 15,
+          read_timeout: 10,
           idempotent: true,
         )
       return nil if response.status != 200

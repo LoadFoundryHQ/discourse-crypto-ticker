@@ -55,25 +55,44 @@ const BINANCE_SLUGS = {
 // page (would link to a non-existent Binance URL). Excluded from the top list.
 const BINANCE_EXCLUDE = ["FIGR_HELOC"];
 
+// Shared cache (per tab) so the ticker doesn't re-fetch on every navigation when
+// it is rendered inside the router outlet (list/topic positions).
+let priceCache = { at: 0, data: null };
+
 export default class CryptoTicker extends Component {
   @service siteSettings;
 
   @tracked prices = null;
-  @tracked failed = false;
   timer = null;
+  onVisibility = null;
 
   constructor() {
     super(...arguments);
-    if (this.enabled) {
-      this.load();
-      this.timer = setInterval(() => this.load(), REFRESH_SECONDS * 1000);
+
+    if (!this.enabled) {
+      return;
     }
+
+    if (priceCache.data && Date.now() - priceCache.at < REFRESH_SECONDS * 1000) {
+      this.prices = priceCache.data;
+    } else {
+      this.load();
+    }
+
+    this.timer = setInterval(() => this.load(), REFRESH_SECONDS * 1000);
+    this.onVisibility = () => {
+      if (!document.hidden) {
+        this.load();
+      }
+    };
+    document.addEventListener("visibilitychange", this.onVisibility);
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
-    if (this.timer) {
-      clearInterval(this.timer);
+    clearInterval(this.timer);
+    if (this.onVisibility) {
+      document.removeEventListener("visibilitychange", this.onVisibility);
     }
   }
 
@@ -112,30 +131,33 @@ export default class CryptoTicker extends Component {
     return parseInt(this.siteSettings.crypto_ticker_top_count, 10) || 10;
   }
 
-  get binanceBase() {
-    return BINANCE_BASE;
-  }
-
   get rows() {
-    if (!this.prices) {
+    if (!Array.isArray(this.prices) || !this.prices.length) {
       return [];
     }
+
     const formatted = this.prices.map((coin) => {
-      const change = coin.price_change_percentage_24h;
+      const change = coin?.price_change_percentage_24h;
       const hasChange = typeof change === "number";
-      const symbol = (coin.symbol || "").toUpperCase();
+      const symbol = (coin?.symbol || "").toUpperCase();
       return {
         symbol,
         url: this.binanceUrl(this.binanceSlug(coin)),
-        price: this.formatPrice(coin.current_price),
+        price: this.formatPrice(coin?.current_price),
         change: hasChange ? `${change >= 0 ? "+" : ""}${change.toFixed(2)}%` : "",
         up: !hasChange || change >= 0,
       };
     });
+
     return this.marquee ? [...formatted, ...formatted] : formatted;
   }
 
   async load() {
+    // Don't poll while the tab is in the background.
+    if (document.hidden) {
+      return;
+    }
+
     try {
       const response = await fetch(this.apiUrl(), {
         headers: { Accept: "application/json" },
@@ -143,30 +165,37 @@ export default class CryptoTicker extends Component {
       if (!response.ok) {
         throw new Error(`CoinGecko HTTP ${response.status}`);
       }
-      let list = await response.json();
+
+      const payload = await response.json();
+      if (!Array.isArray(payload)) {
+        throw new Error("Unexpected CoinGecko response");
+      }
+
+      let list = payload;
       if (!this.ids.length) {
         list = list
           .filter((coin) => !BINANCE_EXCLUDE.includes((coin.symbol || "").toUpperCase()))
           .slice(0, this.topCount);
       }
+
       this.prices = list;
-      this.failed = false;
+      priceCache = { at: Date.now(), data: list };
     } catch (error) {
-      this.failed = true;
+      // Keep the last good data; the ticker stays as-is until the next attempt.
     }
   }
 
   binanceUrl(slug) {
-    return `${this.binanceBase}${slug}?ref=${BINANCE_REFERRAL}`;
+    return `${BINANCE_BASE}${slug}?ref=${BINANCE_REFERRAL}`;
   }
 
   binanceSlug(coin) {
-    const symbol = (coin.symbol || "").toUpperCase();
-    return BINANCE_SLUGS[symbol] || this.slugify(coin.name || coin.symbol || symbol);
+    const symbol = (coin?.symbol || "").toUpperCase();
+    return BINANCE_SLUGS[symbol] || this.slugify(coin?.name || coin?.symbol || symbol);
   }
 
   slugify(name) {
-    return name
+    return String(name)
       .toLowerCase()
       .trim()
       .replace(/\s+/g, "-")
@@ -183,15 +212,12 @@ export default class CryptoTicker extends Component {
   }
 
   apiUrl() {
-    const base = `${COINGECKO_MARKETS}?vs_currency=${this.currency}&price_change_percentage=24h&sparkline=false`;
+    const base = `${COINGECKO_MARKETS}?vs_currency=${CURRENCY}&price_change_percentage=24h&sparkline=false`;
     if (this.ids.length) {
-      return `${base}&ids=${this.ids.join(",")}`;
+      const ids = this.ids.map((id) => encodeURIComponent(id)).join(",");
+      return `${base}&ids=${ids}`;
     }
     return `${base}&order=market_cap_desc&per_page=${this.topCount + 10}&page=1`;
-  }
-
-  get currency() {
-    return CURRENCY;
   }
 
   <template>

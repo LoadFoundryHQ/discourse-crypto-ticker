@@ -143,6 +143,16 @@
   }
 }
 
+// Respect users who prefer reduced motion: show the coins statically.
+@media (prefers-reduced-motion: reduce) {
+  .crypto-ticker__track {
+    animation: none !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    white-space: normal;
+  }
+}
+
 @media (max-width: 700px) {
   .crypto-ticker {
     font-size: 12px;

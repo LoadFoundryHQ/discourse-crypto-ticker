@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 # name: discourse-crypto-ticker
-# about: Adds a price ticker for major cryptocurrencies just below the site header.
-# version: 0.3.0
+# about: A cryptocurrency price ticker with 6 positions, 4 styles and a coin picker.
+# version: 0.4.0
 # authors: BitForo
 # url: https://github.com/bitforo/discourse-crypto-ticker
 # required_version: 3.2.0

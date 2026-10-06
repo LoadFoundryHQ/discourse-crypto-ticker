@@ -1,6 +1,6 @@
-# discourse-crypto-ticker
+# Load Foundry Crypto Ticker
 
-A Discourse plugin that adds a **cryptocurrency price ticker** with live prices and 24h change.
+A **Load Foundry** plugin for Discourse that adds a **cryptocurrency price ticker** with live prices and 24h change.
 
 - 💰 Live prices + 24h change for the coins you choose.
 - 📍 **6 positions**: below the header, above/below the topic list, top/end of a topic, or the left sidebar.
@@ -10,13 +10,15 @@ A Discourse plugin that adds a **cryptocurrency price ticker** with live prices 
 - 🆓 Prices from the public **CoinGecko** API — no API key required.
 - 📱 Fully responsive; scrolling styles pause on hover.
 
+> Formerly `bitforo/discourse-crypto-ticker`. The repository moved to **Load Foundry**; the old URL redirects, so existing installs keep working.
+
 ## Screenshots
 
 ![Crypto ticker below the site header](screenshots/header-en.png)
 
 ![Ticker strip](screenshots/ticker-en.png)
 
-![Coin picker — Admin → Plugins → Crypto Ticker](screenshots/picker-en.png)
+![Coin picker — Admin → Plugins → Load Foundry Crypto Ticker](screenshots/picker-en.png)
 
 ## Installation
 
@@ -28,7 +30,7 @@ hooks:
     - exec:
         cd: $home/plugins
         cmd:
-          - git clone https://github.com/bitforo/discourse-crypto-ticker.git
+          - git clone https://github.com/LoadFoundryHQ/discourse-crypto-ticker.git
 ```
 
 Then rebuild:
@@ -38,9 +40,11 @@ cd /var/discourse
 ./launcher rebuild app
 ```
 
+If you already had it installed from the old URL, it keeps working (GitHub redirect). To point to the new home explicitly, update the clone URL.
+
 ## Choosing coins
 
-Open **Admin → Plugins → Crypto Ticker** (or `/admin/plugins/crypto-ticker`) and go to the
+Open **Admin → Plugins → Load Foundry Crypto Ticker** (or `/admin/plugins/crypto-ticker`) and go to the
 **Coins** tab: pick from the top 20 by market cap, or search any Binance-listed coin by
 symbol or name. Click **Save**.
 
@@ -48,7 +52,7 @@ Leave the selection empty to automatically show the top coins by market cap.
 
 ## Settings
 
-Admin → Settings → Plugins (area **Crypto Ticker**):
+Admin → Settings → Plugins (area **Load Foundry Crypto Ticker**):
 
 | Setting | Default | Description |
 |---|---|---|
@@ -60,6 +64,8 @@ Admin → Settings → Plugins (area **Crypto Ticker**):
 
 `crypto_ticker_coins` (the selected CoinGecko ids) is **hidden** from Settings because it is
 managed from the coin picker page.
+
+> Setting keys keep the `crypto_ticker_*` prefix on purpose, so existing forums preserve their configuration after the rebrand.
 
 ### Positions
 
@@ -78,4 +84,4 @@ managed from the coin picker page.
 
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE). Based on the original work by **BitForo**; rebranded and maintained by **Load Foundry**.

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 # name: discourse-crypto-ticker
-# about: A cryptocurrency price ticker with 6 positions, 4 styles and a coin picker.
-# version: 0.4.0
-# authors: BitForo
-# url: https://github.com/bitforo/discourse-crypto-ticker
+# about: Load Foundry Crypto Ticker — a cryptocurrency price ticker with 6 positions, 4 styles and a coin picker.
+# version: 1.0.0
+# authors: Load Foundry (originally by BitForo)
+# url: https://github.com/LoadFoundryHQ/discourse-crypto-ticker
 # required_version: 3.2.0
 
 enabled_site_setting :crypto_ticker_enabled

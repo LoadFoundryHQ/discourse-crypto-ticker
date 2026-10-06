@@ -1,7 +1,7 @@
 es:
   js:
     crypto_ticker:
-      title: "Ticker de precios"
+      title: "Ticker de Load Foundry"
       aria_label: "Precios de criptomonedas"
       positions:
         header: "Debajo de la cabecera"

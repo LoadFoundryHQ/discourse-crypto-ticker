@@ -1,7 +1,7 @@
 en:
   js:
     crypto_ticker:
-      title: "Crypto Ticker"
+      title: "Load Foundry Crypto Ticker"
       aria_label: "Cryptocurrency prices"
       positions:
         header: "Below the header"

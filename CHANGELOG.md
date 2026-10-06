@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.0
+
+- **Language is now a plugin setting** (`crypto_ticker_language`, in Admin → Settings → Plugins): `Automatic (user's language)`, `English`, `Español` or `Português`. It drives the language of the plugin's options and its coin/stock/index picker.
+- **`Crypto ticker show change`** and **`Crypto ticker stocks enabled`** are now **on by default and hidden** from the settings panel.
+- **`Crypto ticker stocks`** is now **hidden** (stocks and indexes are chosen from the picker's tabs, no need to type symbols).
+
 ## 1.4.0
 
 - **Language selector in the admin picker** (English / Español / Português): switch the plugin UI language on the spot, no need to change your Discourse interface language. The choice is remembered.

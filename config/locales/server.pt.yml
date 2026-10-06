@@ -7,3 +7,4 @@ pt:
     crypto_ticker_show_change: "Mostrar a variação de 24 h."
     crypto_ticker_stocks_enabled: "Mostrar também ações e índices (Yahoo Finance)."
     crypto_ticker_stocks: "Símbolos do Yahoo Finance para ações e índices (ex.: AAPL, MSFT, ^GSPC)."
+    crypto_ticker_language: "Idioma usado pelo plugin em suas opções e no seletor de moedas/ações/índices."

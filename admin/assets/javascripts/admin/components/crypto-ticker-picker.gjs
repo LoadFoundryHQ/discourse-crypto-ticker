@@ -36,17 +36,6 @@ const MarketBadge = <template>
 
 export default <template>
   <div class="crypto-ticker-picker">
-    <div class="crypto-ticker-picker__toolbar">
-      <label class="crypto-ticker-picker__lang">
-        <span>{{@controller.strings.language}}</span>
-        <select value={{@controller.locale}} {{on "change" @controller.setLocale}}>
-          {{#each @controller.locales as |loc|}}
-            <option value={{loc.code}}>{{loc.label}}</option>
-          {{/each}}
-        </select>
-      </label>
-    </div>
-
     <div class="crypto-ticker-picker__tabs">
       <button
         type="button"

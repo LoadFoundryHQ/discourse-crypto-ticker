@@ -12,6 +12,11 @@ plugins:
     type: enum
     enum: "CryptoTicker::StyleSetting"
     client: true
+  crypto_ticker_language:
+    default: auto
+    type: enum
+    enum: "CryptoTicker::LanguageSetting"
+    client: true
   crypto_ticker_coins:
     default: ""
     client: true
@@ -22,12 +27,15 @@ plugins:
   crypto_ticker_show_change:
     default: true
     client: true
+    hidden: true
   crypto_ticker_stocks_enabled:
-    default: false
+    default: true
     client: true
+    hidden: true
   crypto_ticker_stocks:
     default: ""
     client: true
+    hidden: true
   # Affiliate / monetization: fixed by Load Foundry, not shown nor editable by users.
   crypto_ticker_okx_enabled:
     default: true

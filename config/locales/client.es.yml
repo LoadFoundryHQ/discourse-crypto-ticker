@@ -9,10 +9,16 @@ es:
         crypto_ticker_show_change: "Mostrar cambio 24 h"
         crypto_ticker_stocks_enabled: "Activar acciones e índices"
         crypto_ticker_stocks: "Acciones e índices"
+        crypto_ticker_language: "Idioma"
   js:
     crypto_ticker:
       title: "Ticker de Load Foundry"
       aria_label: "Precios de criptomonedas"
+      languages:
+        auto: "Automático (idioma del usuario)"
+        en: "English"
+        es: "Español"
+        pt: "Português"
       positions:
         header: "Debajo de la cabecera"
         topic_list_top: "Arriba de la lista de temas"

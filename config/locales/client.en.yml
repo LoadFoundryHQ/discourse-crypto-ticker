@@ -9,10 +9,16 @@ en:
         crypto_ticker_show_change: "Show 24h change"
         crypto_ticker_stocks_enabled: "Enable stocks & indexes"
         crypto_ticker_stocks: "Stocks & indexes"
+        crypto_ticker_language: "Language"
   js:
     crypto_ticker:
       title: "Load Foundry Crypto Ticker"
       aria_label: "Cryptocurrency prices"
+      languages:
+        auto: "Automatic (user's language)"
+        en: "English"
+        es: "Español"
+        pt: "Português"
       positions:
         header: "Below the header"
         topic_list_top: "Above the topic list"

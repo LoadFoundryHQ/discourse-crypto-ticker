@@ -2,7 +2,7 @@
 
 # name: discourse-crypto-ticker
 # about: Load Foundry Crypto Ticker — a cryptocurrency price ticker with 6 positions, 4 styles and a coin picker.
-# version: 1.4.0
+# version: 1.5.0
 # authors: Load Foundry (originally by BitForo)
 # url: https://github.com/LoadFoundryHQ/discourse-crypto-ticker
 # required_version: 3.2.0
@@ -12,6 +12,7 @@ enabled_site_setting :crypto_ticker_enabled
 # Loaded eagerly: enum site settings must exist before settings are parsed.
 require_relative "lib/crypto_ticker/position_setting"
 require_relative "lib/crypto_ticker/style_setting"
+require_relative "lib/crypto_ticker/language_setting"
 require_relative "lib/crypto_ticker/coin_catalog"
 
 register_asset "stylesheets/crypto-ticker.scss"

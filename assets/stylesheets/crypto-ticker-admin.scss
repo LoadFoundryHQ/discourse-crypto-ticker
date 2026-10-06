@@ -1,28 +1,6 @@
 .crypto-ticker-picker {
   max-width: 760px;
 
-  &__toolbar {
-    display: flex;
-    justify-content: flex-end;
-    margin-block-end: 0.5em;
-  }
-
-  &__lang {
-    align-items: center;
-    color: var(--primary-medium);
-    display: flex;
-    font-size: 0.9em;
-    gap: 0.5em;
-  }
-
-  &__lang select {
-    background: var(--secondary);
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-input-border-radius);
-    color: var(--primary);
-    padding: 0.35em 0.5em;
-  }
-
   &__tabs {
     display: flex;
     flex-wrap: wrap;

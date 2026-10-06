@@ -1,21 +1,13 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
+import { inject as service } from "@ember/service";
 import { later } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-const STORAGE_KEY = "cryptoTickerPickerLocale";
-
-export const PICKER_LOCALES = [
-  { code: "en", label: "English" },
-  { code: "es", label: "Español" },
-  { code: "pt", label: "Português" },
-];
-
 const PICKER_I18N = {
   en: {
-    language: "Language",
     tab_crypto: "Crypto",
     tab_stocks: "Stocks",
     tab_indexes: "Indexes",
@@ -32,7 +24,6 @@ const PICKER_I18N = {
     saved: "Saved! Reload the page to see the changes.",
   },
   es: {
-    language: "Idioma",
     tab_crypto: "Cripto",
     tab_stocks: "Acciones",
     tab_indexes: "Índices",
@@ -49,7 +40,6 @@ const PICKER_I18N = {
     saved: "¡Guardado! Recarga la página para ver los cambios.",
   },
   pt: {
-    language: "Idioma",
     tab_crypto: "Cripto",
     tab_stocks: "Ações",
     tab_indexes: "Índices",
@@ -67,15 +57,7 @@ const PICKER_I18N = {
   },
 };
 
-function initialLocale() {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored && PICKER_I18N[stored]) {
-      return stored;
-    }
-  } catch (e) {
-    // ignore
-  }
+function interfaceLocale() {
   const html = (document.documentElement.getAttribute("lang") || "en")
     .slice(0, 2)
     .toLowerCase();
@@ -83,6 +65,8 @@ function initialLocale() {
 }
 
 export default class CryptoTickerPickerController extends Controller {
+  @service siteSettings;
+
   @tracked allCoins = [];
   @tracked topCoins = [];
   @tracked selectedIds = [];
@@ -95,11 +79,16 @@ export default class CryptoTickerPickerController extends Controller {
   @tracked searching = false;
 
   @tracked tab = "crypto";
-  @tracked locale = initialLocale();
   @tracked saving = false;
   @tracked saved = false;
 
-  locales = PICKER_LOCALES;
+  get locale() {
+    const setting = this.siteSettings.crypto_ticker_language;
+    if (setting && setting !== "auto" && PICKER_I18N[setting]) {
+      return setting;
+    }
+    return interfaceLocale();
+  }
 
   get strings() {
     return PICKER_I18N[this.locale] || PICKER_I18N.en;
@@ -155,16 +144,6 @@ export default class CryptoTickerPickerController extends Controller {
 
   get stockSelectedCount() {
     return this.selectedStocks.length;
-  }
-
-  @action
-  setLocale(event) {
-    this.locale = event.target.value;
-    try {
-      localStorage.setItem(STORAGE_KEY, this.locale);
-    } catch (e) {
-      // ignore
-    }
   }
 
   @action

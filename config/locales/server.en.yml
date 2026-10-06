@@ -7,3 +7,4 @@ en:
     crypto_ticker_show_change: "Show the 24h change percentage."
     crypto_ticker_stocks_enabled: "Also show stocks and indexes (Yahoo Finance)."
     crypto_ticker_stocks: "Yahoo Finance symbols for stocks and indexes (e.g. AAPL, MSFT, ^GSPC)."
+    crypto_ticker_language: "Language used by the plugin's options and its coin/stock/index picker."

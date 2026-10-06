@@ -25,6 +25,7 @@ after_initialize do
   require_relative "lib/crypto_ticker/admin_controller"
   require_relative "lib/crypto_ticker/quotes"
   require_relative "lib/crypto_ticker/quotes_controller"
+  require_relative "lib/crypto_ticker/symbols_controller"
 
   Discourse::Application.routes.append do
     scope "/admin/plugins/crypto-ticker", defaults: { format: :json } do
@@ -34,5 +35,7 @@ after_initialize do
 
     # Public proxy for stocks/indexes quotes (Stooq).
     get "/crypto-ticker/quotes" => "crypto_ticker/quotes#index", defaults: { format: :json }
+    # OKX-listed base currencies (to pick OKX vs Binance link).
+    get "/crypto-ticker/okx-symbols" => "crypto_ticker/symbols#okx", defaults: { format: :json }
   end
 end

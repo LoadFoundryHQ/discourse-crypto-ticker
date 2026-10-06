@@ -6,7 +6,7 @@ A **Load Foundry** plugin for Discourse that adds a **cryptocurrency price ticke
 - 📍 **6 positions**: below the header, above/below the topic list, top/end of a topic, or the left sidebar.
 - 🎨 **4 styles**: Classic and Dark (scrolling strips), Minimal (flat, wraps) and Cards (static grid).
 - 🧩 **Coin picker**: an admin page with the top 20 coins and a live search of OKX-listed coins.
-- 🔗 Every coin links to **OKX** (with our affiliate).
+- 🔗 Every coin links to **OKX** (with our affiliate); coins **not listed on OKX** fall back to **Binance**.
 - 🆓 Prices from the public **CoinGecko** API — no API key required.
 - 📱 Fully responsive; scrolling styles pause on hover.
 
@@ -80,7 +80,7 @@ managed from the coin picker page.
 
 - Prices are fetched **client-side** from the public CoinGecko API and refreshed every 60 s.
   For high-traffic forums, consider moving the fetch server-side to avoid CoinGecko rate limits.
-- Every coin links to its **OKX** page (with our affiliate).
+- Every coin links to its **OKX** page (with our affiliate); coins not listed on OKX link to their **Binance** page.
 
 ## License
 

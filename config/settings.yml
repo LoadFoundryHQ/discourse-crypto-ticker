@@ -40,3 +40,9 @@ plugins:
   crypto_ticker_tv_url:
     default: "https://es.tradingview.com/symbols/{symbol}/?aff_id={aff}"
     client: true
+  crypto_ticker_binance_aff:
+    default: "discourse"
+    client: true
+  crypto_ticker_binance_url:
+    default: "https://www.binance.com/price/{slug}?ref={aff}"
+    client: true

@@ -10,17 +10,50 @@ const REFRESH_SECONDS = 60;
 // Styles that scroll horizontally (marquee). The rest are static.
 const MARQUEE_STYLES = ["classic", "dark"];
 
-// Stablecoins can't be paired with themselves on OKX; send them to the signup link.
-const STABLECOINS = ["USDT"];
-
 // Referral templates (editable via site settings without touching code).
 const DEFAULT_OKX_URL = "https://www.okx.com/trade-spot/{pair}?channelId={aff}";
-const DEFAULT_OKX_JOIN = "https://www.okx.com/join/{aff}";
+const DEFAULT_BINANCE_URL = "https://www.binance.com/price/{slug}?ref={aff}";
 const DEFAULT_TV_URL = "https://es.tradingview.com/symbols/{symbol}/?aff_id={aff}";
 
-// Shared cache (per tab) so the ticker doesn't re-fetch on every navigation when
-// it is rendered inside the router outlet (list/topic positions).
+// Binance price-page slugs (symbol -> slug), used only for coins NOT on OKX.
+const BINANCE_SLUGS = {
+  BTC: "bitcoin",
+  ETH: "ethereum",
+  USDT: "tether",
+  USDC: "usd-coin",
+  BNB: "bnb",
+  SOL: "solana",
+  XRP: "xrp",
+  DOGE: "dogecoin",
+  ADA: "cardano",
+  TRX: "tron",
+  TON: "toncoin",
+  AVAX: "avalanche",
+  LINK: "chainlink",
+  DOT: "polkadot",
+  MATIC: "polygon",
+  POL: "polygon-ecosystem-token",
+  LTC: "litecoin",
+  BCH: "bitcoin-cash",
+  SHIB: "shiba-inu",
+  XLM: "stellar",
+  ATOM: "cosmos",
+  UNI: "uniswap",
+  ETC: "ethereum-classic",
+  FIL: "filecoin",
+  APT: "aptos",
+  ARB: "arbitrum",
+  OP: "optimism",
+  NEAR: "near-protocol",
+  ICP: "internet-computer",
+  HBAR: "hedera-hashgraph",
+  ZEC: "zcash",
+};
+
+// Shared caches (per tab) so the ticker doesn't re-fetch on every navigation
+// when it is rendered inside the router outlet (list/topic positions).
 let priceCache = { at: 0, data: null };
+let okxCache = null;
 
 export default class CryptoTicker extends Component {
   @service siteSettings;
@@ -28,6 +61,7 @@ export default class CryptoTicker extends Component {
 
   @tracked prices = null;
   @tracked stocks = null;
+  @tracked okxSymbols = null;
   timer = null;
   onVisibility = null;
 
@@ -36,6 +70,12 @@ export default class CryptoTicker extends Component {
 
     if (!this.enabled) {
       return;
+    }
+
+    if (okxCache) {
+      this.okxSymbols = okxCache;
+    } else {
+      this.loadOkxSymbols();
     }
 
     if (priceCache.data && Date.now() - priceCache.at < REFRESH_SECONDS * 1000) {
@@ -144,7 +184,7 @@ export default class CryptoTicker extends Component {
       const symbol = (coin?.symbol || "").toUpperCase();
       return {
         symbol,
-        url: this.okxUrl(symbol),
+        url: this.cryptoUrl(coin, symbol),
         price: this.formatPrice(coin?.current_price),
         change: hasChange ? `${change >= 0 ? "+" : ""}${change.toFixed(2)}%` : "",
         up: !hasChange || change >= 0,
@@ -168,6 +208,12 @@ export default class CryptoTicker extends Component {
         up: !hasChange || change >= 0,
       };
     });
+  }
+
+  // OKX by default; Binance only when the coin is NOT listed on OKX.
+  cryptoUrl(coin, symbol) {
+    const onOkx = !this.okxSymbols || this.okxSymbols.includes(symbol);
+    return onOkx ? this.okxUrl(symbol) : this.binanceUrl(coin);
   }
 
   async load() {
@@ -217,18 +263,49 @@ export default class CryptoTicker extends Component {
     }
   }
 
+  async loadOkxSymbols() {
+    try {
+      const response = await fetch("/crypto-ticker/okx-symbols", {
+        headers: { Accept: "application/json" },
+      });
+      if (!response.ok) {
+        throw new Error(`okx HTTP ${response.status}`);
+      }
+      const payload = await response.json();
+      okxCache = Array.isArray(payload?.symbols) ? payload.symbols : [];
+    } catch (error) {
+      okxCache = [];
+    }
+    this.okxSymbols = okxCache;
+  }
+
   okxUrl(symbol) {
     const aff = encodeURIComponent(this.siteSettings.crypto_ticker_okx_aff || "");
-    const sym = String(symbol).toLowerCase();
-
-    if (STABLECOINS.includes(symbol)) {
-      return (DEFAULT_OKX_JOIN).replace("{aff}", aff);
-    }
-
     const template = this.siteSettings.crypto_ticker_okx_url || DEFAULT_OKX_URL;
     return template
-      .replace("{pair}", encodeURIComponent(`${sym}-usdt`))
+      .replace("{pair}", encodeURIComponent(`${String(symbol).toLowerCase()}-usdt`))
       .replace("{aff}", aff);
+  }
+
+  binanceUrl(coin) {
+    const aff = encodeURIComponent(this.siteSettings.crypto_ticker_binance_aff || "");
+    const template = this.siteSettings.crypto_ticker_binance_url || DEFAULT_BINANCE_URL;
+    return template
+      .replace("{slug}", encodeURIComponent(this.binanceSlug(coin)))
+      .replace("{aff}", aff);
+  }
+
+  binanceSlug(coin) {
+    const symbol = (coin?.symbol || "").toUpperCase();
+    return BINANCE_SLUGS[symbol] || this.slugify(coin?.name || coin?.symbol || symbol);
+  }
+
+  slugify(name) {
+    return String(name)
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "");
   }
 
   tvSymbol(symbol) {

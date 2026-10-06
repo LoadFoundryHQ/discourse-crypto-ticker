@@ -1,6 +1,7 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
+import { later } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
@@ -9,6 +10,14 @@ export default class CryptoTickerPickerController extends Controller {
   @tracked topCoins = [];
   @tracked selectedIds = [];
   @tracked query = "";
+
+  @tracked indexes = [];
+  @tracked selectedStocks = [];
+  @tracked stockQuery = "";
+  @tracked stockResults = [];
+  @tracked searching = false;
+
+  @tracked tab = "crypto";
   @tracked saving = false;
   @tracked saved = false;
 
@@ -36,6 +45,40 @@ export default class CryptoTickerPickerController extends Controller {
     );
   }
 
+  get stockSelected() {
+    const known = {};
+    this.indexes.forEach((index) => (known[index.symbol] = index));
+    return this.selectedStocks.map(
+      (symbol) => known[symbol] || { symbol, name: symbol }
+    );
+  }
+
+  get stockResultsWithState() {
+    const selected = new Set(this.selectedStocks);
+    return this.stockResults.map((result) => ({
+      ...result,
+      selected: selected.has(result.symbol),
+    }));
+  }
+
+  get indexList() {
+    const selected = new Set(this.selectedStocks);
+    return this.indexes.map((index) => ({
+      ...index,
+      selected: selected.has(index.symbol),
+    }));
+  }
+
+  get stockSelectedCount() {
+    return this.selectedStocks.length;
+  }
+
+  @action
+  setTab(tab) {
+    this.tab = tab;
+    this.saved = false;
+  }
+
   @action
   updateQuery(event) {
     this.query = event.target.value;
@@ -59,12 +102,56 @@ export default class CryptoTickerPickerController extends Controller {
   }
 
   @action
+  updateStockQuery(event) {
+    this.stockQuery = event.target.value;
+    this.saved = false;
+
+    if (this.stockQuery.trim().length < 1) {
+      this.stockResults = [];
+      return;
+    }
+    later(this, () => this.searchStocks(), 350);
+  }
+
+  async searchStocks() {
+    const term = this.stockQuery.trim();
+    if (term.length < 1) {
+      return;
+    }
+    this.searching = true;
+    try {
+      const data = await ajax("/admin/plugins/crypto-ticker/search.json", {
+        data: { q: term },
+      });
+      this.stockResults = data.results || [];
+    } catch (error) {
+      this.stockResults = [];
+    } finally {
+      this.searching = false;
+    }
+  }
+
+  @action
+  toggleStock(symbol) {
+    this.saved = false;
+    if (this.selectedStocks.includes(symbol)) {
+      this.selectedStocks = this.selectedStocks.filter((s) => s !== symbol);
+    } else {
+      this.selectedStocks = [...this.selectedStocks, symbol];
+    }
+  }
+
+  @action
   async save() {
     this.saving = true;
     try {
       await ajax("/admin/plugins/crypto-ticker/coins", {
         type: "PUT",
         data: { coins: this.selectedIds.join("|") },
+      });
+      await ajax("/admin/plugins/crypto-ticker/stocks", {
+        type: "PUT",
+        data: { stocks: this.selectedStocks.join("|") },
       });
       this.saved = true;
     } catch (error) {

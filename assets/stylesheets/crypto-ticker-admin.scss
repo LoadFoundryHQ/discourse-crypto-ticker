@@ -1,6 +1,13 @@
 .crypto-ticker-picker {
   max-width: 760px;
 
+  &__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    margin-block-end: 1em;
+  }
+
   &__help {
     color: var(--primary-medium);
     margin-block-end: 1em;

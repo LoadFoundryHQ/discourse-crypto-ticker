@@ -11,6 +11,8 @@ export default class CryptoTickerPickerRoute extends Route {
       allCoins: model.coins || [],
       topCoins: model.top || [],
       selectedIds: model.selected || [],
+      indexes: model.indexes || [],
+      selectedStocks: model.selected_stocks || [],
     });
   }
 }

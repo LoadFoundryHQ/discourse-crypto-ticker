@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.0
+
+- **Admin picker with tabs** (Cripto / Acciones / Índices): choose everything from the UI, no need to type symbols.
+  - **Stocks**: search by symbol or name (Yahoo Finance via `/admin/plugins/crypto-ticker/search`), click to add/remove.
+  - **Indexes**: curated list (S&P 500, Nasdaq, Dow, DAX, IBEX, Nikkei…), click to toggle.
+  - Both saved together with `crypto_ticker_stocks` (`PUT /admin/plugins/crypto-ticker/stocks`).
+- OKX affiliate id lowercased to `discourse`.
+
 ## 1.2.0
 
 - **Affiliate/monetization is built-in and hidden**: the settings `crypto_ticker_okx_enabled` (default **on**), `crypto_ticker_okx_aff`, `crypto_ticker_okx_url`, `crypto_ticker_tv_url`, `crypto_ticker_binance_aff`, `crypto_ticker_binance_url` and `crypto_ticker_tradingview_aff` are **not shown** in the admin UI and not meant to be edited by users.

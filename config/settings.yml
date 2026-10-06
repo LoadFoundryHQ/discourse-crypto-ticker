@@ -34,7 +34,7 @@ plugins:
     client: true
     hidden: true
   crypto_ticker_okx_aff:
-    default: "DISCOURSE"
+    default: "discourse"
     client: true
     hidden: true
   crypto_ticker_tradingview_aff:

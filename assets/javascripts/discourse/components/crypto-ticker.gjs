@@ -6,54 +6,17 @@ import { i18n } from "discourse-i18n";
 const COINGECKO_MARKETS = "https://api.coingecko.com/api/v3/coins/markets";
 const CURRENCY = "usd";
 const REFRESH_SECONDS = 60;
-const BINANCE_BASE = "https://www.binance.com/price/";
-
-// Referral code baked into every Binance link (change here, globally).
-const BINANCE_REFERRAL = "discourse";
 
 // Styles that scroll horizontally (marquee). The rest are static.
 const MARQUEE_STYLES = ["classic", "dark"];
 
-// Binance price-page slugs (symbol -> slug). Binance doesn't use the raw ticker,
-// and CoinGecko's id/name don't always match either (e.g. USDC -> usd-coin).
-// Anything not listed falls back to the slugified coin name.
-const BINANCE_SLUGS = {
-  BTC: "bitcoin",
-  ETH: "ethereum",
-  USDT: "tether",
-  USDC: "usd-coin",
-  BNB: "bnb",
-  SOL: "solana",
-  XRP: "xrp",
-  DOGE: "dogecoin",
-  ADA: "cardano",
-  TRX: "tron",
-  TON: "toncoin",
-  AVAX: "avalanche",
-  LINK: "chainlink",
-  DOT: "polkadot",
-  MATIC: "polygon",
-  POL: "polygon-ecosystem-token",
-  LTC: "litecoin",
-  BCH: "bitcoin-cash",
-  SHIB: "shiba-inu",
-  XLM: "stellar",
-  ATOM: "cosmos",
-  UNI: "uniswap",
-  ETC: "ethereum-classic",
-  FIL: "filecoin",
-  APT: "aptos",
-  ARB: "arbitrum",
-  OP: "optimism",
-  NEAR: "near-protocol",
-  ICP: "internet-computer",
-  HBAR: "hedera-hashgraph",
-  ZEC: "zcash",
-};
+// Stablecoins can't be paired with themselves on OKX; send them to the signup link.
+const STABLECOINS = ["USDT"];
 
-// Coins shown by CoinGecko's market cap ranking but WITHOUT an official Binance
-// page (would link to a non-existent Binance URL). Excluded from the top list.
-const BINANCE_EXCLUDE = ["FIGR_HELOC"];
+// Referral templates (editable via site settings without touching code).
+const DEFAULT_OKX_URL = "https://www.okx.com/trade-spot/{pair}?channelId={aff}";
+const DEFAULT_OKX_JOIN = "https://www.okx.com/join/{aff}";
+const DEFAULT_TV_URL = "https://es.tradingview.com/symbols/{symbol}/?aff_id={aff}";
 
 // Shared cache (per tab) so the ticker doesn't re-fetch on every navigation when
 // it is rendered inside the router outlet (list/topic positions).
@@ -61,8 +24,10 @@ let priceCache = { at: 0, data: null };
 
 export default class CryptoTicker extends Component {
   @service siteSettings;
+  @service currentUser;
 
   @tracked prices = null;
+  @tracked stocks = null;
   timer = null;
   onVisibility = null;
 
@@ -79,10 +44,23 @@ export default class CryptoTicker extends Component {
       this.load();
     }
 
-    this.timer = setInterval(() => this.load(), REFRESH_SECONDS * 1000);
+    if (this.stocksEnabled && this.stockSymbols.length) {
+      this.loadStocks();
+    }
+
+    this.timer = setInterval(() => {
+      this.load();
+      if (this.stocksEnabled && this.stockSymbols.length) {
+        this.loadStocks();
+      }
+    }, REFRESH_SECONDS * 1000);
+
     this.onVisibility = () => {
       if (!document.hidden) {
         this.load();
+        if (this.stocksEnabled && this.stockSymbols.length) {
+          this.loadStocks();
+        }
       }
     };
     document.addEventListener("visibilitychange", this.onVisibility);
@@ -131,25 +109,65 @@ export default class CryptoTicker extends Component {
     return parseInt(this.siteSettings.crypto_ticker_top_count, 10) || 10;
   }
 
+  get stocksEnabled() {
+    if (this.siteSettings.crypto_ticker_stocks_enabled) {
+      return true;
+    }
+    // Staff-only preview via ?crypto_ticker_preview=stocks (no need to toggle the setting).
+    return (
+      !!this.currentUser?.staff &&
+      typeof window !== "undefined" &&
+      window.location.search.includes("crypto_ticker_preview")
+    );
+  }
+
+  get stockSymbols() {
+    return (this.siteSettings.crypto_ticker_stocks || "")
+      .split(/[,\s]+/)
+      .map((symbol) => symbol.trim())
+      .filter(Boolean);
+  }
+
   get rows() {
+    const rows = [...this.cryptoRows, ...this.stockRows];
+    return this.marquee ? [...rows, ...rows] : rows;
+  }
+
+  get cryptoRows() {
     if (!Array.isArray(this.prices) || !this.prices.length) {
       return [];
     }
 
-    const formatted = this.prices.map((coin) => {
+    return this.prices.map((coin) => {
       const change = coin?.price_change_percentage_24h;
       const hasChange = typeof change === "number";
       const symbol = (coin?.symbol || "").toUpperCase();
       return {
         symbol,
-        url: this.binanceUrl(this.binanceSlug(coin)),
+        url: this.okxUrl(symbol),
         price: this.formatPrice(coin?.current_price),
         change: hasChange ? `${change >= 0 ? "+" : ""}${change.toFixed(2)}%` : "",
         up: !hasChange || change >= 0,
       };
     });
+  }
 
-    return this.marquee ? [...formatted, ...formatted] : formatted;
+  get stockRows() {
+    if (!this.stocksEnabled || !Array.isArray(this.stocks) || !this.stocks.length) {
+      return [];
+    }
+
+    return this.stocks.map((quote) => {
+      const change = quote?.change;
+      const hasChange = typeof change === "number";
+      return {
+        symbol: this.tvSymbol(quote?.symbol || ""),
+        url: this.tvUrl(quote?.symbol || ""),
+        price: this.formatPrice(quote?.price),
+        change: hasChange ? `${change >= 0 ? "+" : ""}${change.toFixed(2)}%` : "",
+        up: !hasChange || change >= 0,
+      };
+    });
   }
 
   async load() {
@@ -173,9 +191,7 @@ export default class CryptoTicker extends Component {
 
       let list = payload;
       if (!this.ids.length) {
-        list = list
-          .filter((coin) => !BINANCE_EXCLUDE.includes((coin.symbol || "").toUpperCase()))
-          .slice(0, this.topCount);
+        list = list.slice(0, this.topCount);
       }
 
       this.prices = list;
@@ -185,21 +201,49 @@ export default class CryptoTicker extends Component {
     }
   }
 
-  binanceUrl(slug) {
-    return `${BINANCE_BASE}${slug}?ref=${BINANCE_REFERRAL}`;
+  async loadStocks() {
+    try {
+      const symbols = encodeURIComponent(this.stockSymbols.join(","));
+      const response = await fetch(`/crypto-ticker/quotes?symbols=${symbols}`, {
+        headers: { Accept: "application/json" },
+      });
+      if (!response.ok) {
+        throw new Error(`quotes HTTP ${response.status}`);
+      }
+      const payload = await response.json();
+      this.stocks = Array.isArray(payload?.quotes) ? payload.quotes : [];
+    } catch (error) {
+      // Keep the last good data.
+    }
   }
 
-  binanceSlug(coin) {
-    const symbol = (coin?.symbol || "").toUpperCase();
-    return BINANCE_SLUGS[symbol] || this.slugify(coin?.name || coin?.symbol || symbol);
+  okxUrl(symbol) {
+    const aff = encodeURIComponent(this.siteSettings.crypto_ticker_okx_aff || "");
+    const sym = String(symbol).toLowerCase();
+
+    if (STABLECOINS.includes(symbol)) {
+      return (DEFAULT_OKX_JOIN).replace("{aff}", aff);
+    }
+
+    const template = this.siteSettings.crypto_ticker_okx_url || DEFAULT_OKX_URL;
+    return template
+      .replace("{pair}", encodeURIComponent(`${sym}-usdt`))
+      .replace("{aff}", aff);
   }
 
-  slugify(name) {
-    return String(name)
-      .toLowerCase()
-      .trim()
-      .replace(/\s+/g, "-")
-      .replace(/[^a-z0-9-]/g, "");
+  tvSymbol(symbol) {
+    return String(symbol)
+      .replace(/^\^/, "")
+      .replace(/\.(us|uk|de|jp|hk)$/i, "")
+      .toUpperCase();
+  }
+
+  tvUrl(symbol) {
+    const aff = encodeURIComponent(this.siteSettings.crypto_ticker_tradingview_aff || "");
+    const template = this.siteSettings.crypto_ticker_tv_url || DEFAULT_TV_URL;
+    return template
+      .replace("{symbol}", encodeURIComponent(this.tvSymbol(symbol)))
+      .replace("{aff}", aff);
   }
 
   formatPrice(value) {

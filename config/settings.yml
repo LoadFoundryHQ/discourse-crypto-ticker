@@ -22,3 +22,21 @@ plugins:
   crypto_ticker_show_change:
     default: true
     client: true
+  crypto_ticker_stocks_enabled:
+    default: false
+    client: true
+  crypto_ticker_stocks:
+    default: ""
+    client: true
+  crypto_ticker_okx_aff:
+    default: "DISCOURSE"
+    client: true
+  crypto_ticker_tradingview_aff:
+    default: "1171937"
+    client: true
+  crypto_ticker_okx_url:
+    default: "https://www.okx.com/trade-spot/{pair}?channelId={aff}"
+    client: true
+  crypto_ticker_tv_url:
+    default: "https://es.tradingview.com/symbols/{symbol}/?aff_id={aff}"
+    client: true

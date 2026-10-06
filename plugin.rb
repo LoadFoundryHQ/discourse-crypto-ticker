@@ -2,7 +2,7 @@
 
 # name: discourse-crypto-ticker
 # about: Load Foundry Crypto Ticker — a cryptocurrency price ticker with 6 positions, 4 styles and a coin picker.
-# version: 1.0.0
+# version: 1.1.0
 # authors: Load Foundry (originally by BitForo)
 # url: https://github.com/LoadFoundryHQ/discourse-crypto-ticker
 # required_version: 3.2.0
@@ -23,11 +23,16 @@ add_admin_route "crypto_ticker.title", "discourse-crypto-ticker", use_new_show_r
 
 after_initialize do
   require_relative "lib/crypto_ticker/admin_controller"
+  require_relative "lib/crypto_ticker/quotes"
+  require_relative "lib/crypto_ticker/quotes_controller"
 
   Discourse::Application.routes.append do
     scope "/admin/plugins/crypto-ticker", defaults: { format: :json } do
       get "/coins" => "crypto_ticker/admin#coins"
       put "/coins" => "crypto_ticker/admin#update"
     end
+
+    # Public proxy for stocks/indexes quotes (Stooq).
+    get "/crypto-ticker/quotes" => "crypto_ticker/quotes#index", defaults: { format: :json }
   end
 end

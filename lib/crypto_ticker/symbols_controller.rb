@@ -2,9 +2,10 @@
 
 module CryptoTicker
   class SymbolsController < ::ApplicationController
-    # Base currencies listed on OKX (USDT pairs) so the client can decide the link.
-    def okx
-      render json: { symbols: CoinCatalog.okx_symbols }
+    # Base currencies listed on OKX / Binance (USDT pairs) so the client can
+    # decide the link and drop coins not listed on either exchange.
+    def exchanges
+      render json: { okx: CoinCatalog.okx_symbols, binance: CoinCatalog.binance_symbols }
     end
   end
 end

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0
+
+- **Affiliate/monetization is built-in and hidden**: the settings `crypto_ticker_okx_enabled` (default **on**), `crypto_ticker_okx_aff`, `crypto_ticker_okx_url`, `crypto_ticker_tv_url`, `crypto_ticker_binance_aff`, `crypto_ticker_binance_url` and `crypto_ticker_tradingview_aff` are **not shown** in the admin UI and not meant to be edited by users.
+- Crypto links → **OKX** by default; a coin **not listed on OKX** but listed on **Binance** links to Binance; a coin listed on **neither** is **not shown** (`/crypto-ticker/exchange-symbols`).
+
 ## 1.1.0
 
 - **Stocks & indexes** (behind `crypto_ticker_stocks_enabled`, off by default): quotes via **Yahoo Finance** through a server-side proxy (`/crypto-ticker/quotes`).

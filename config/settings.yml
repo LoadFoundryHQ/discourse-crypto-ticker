@@ -28,24 +28,32 @@ plugins:
   crypto_ticker_stocks:
     default: ""
     client: true
+  # Affiliate / monetization: fixed by Load Foundry, not shown nor editable by users.
   crypto_ticker_okx_enabled:
-    default: false
+    default: true
     client: true
+    hidden: true
   crypto_ticker_okx_aff:
     default: "DISCOURSE"
     client: true
+    hidden: true
   crypto_ticker_tradingview_aff:
     default: "1171937"
     client: true
+    hidden: true
   crypto_ticker_okx_url:
     default: "https://www.okx.com/trade-spot/{pair}?channelId={aff}"
     client: true
+    hidden: true
   crypto_ticker_tv_url:
     default: "https://es.tradingview.com/symbols/{symbol}/?aff_id={aff}"
     client: true
+    hidden: true
   crypto_ticker_binance_aff:
     default: "discourse"
     client: true
+    hidden: true
   crypto_ticker_binance_url:
     default: "https://www.binance.com/price/{slug}?ref={aff}"
     client: true
+    hidden: true

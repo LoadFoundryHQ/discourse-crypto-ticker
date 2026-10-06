@@ -10,7 +10,7 @@ const REFRESH_SECONDS = 60;
 // Styles that scroll horizontally (marquee). The rest are static.
 const MARQUEE_STYLES = ["classic", "dark"];
 
-// Referral templates (editable via site settings without touching code).
+// Referral templates (fixed by Load Foundry, editable via hidden site settings).
 const DEFAULT_OKX_URL = "https://www.okx.com/trade-spot/{pair}?channelId={aff}";
 const DEFAULT_BINANCE_URL = "https://www.binance.com/price/{slug}?ref={aff}";
 const DEFAULT_TV_URL = "https://es.tradingview.com/symbols/{symbol}/?aff_id={aff}";
@@ -65,7 +65,7 @@ const TV_SYMBOLS = {
 // Shared caches (per tab) so the ticker doesn't re-fetch on every navigation
 // when it is rendered inside the router outlet (list/topic positions).
 let priceCache = { at: 0, data: null };
-let okxCache = null;
+let exchangeCache = null;
 
 export default class CryptoTicker extends Component {
   @service siteSettings;
@@ -73,7 +73,7 @@ export default class CryptoTicker extends Component {
 
   @tracked prices = null;
   @tracked stocks = null;
-  @tracked okxSymbols = null;
+  @tracked exchangeSymbols = null;
   timer = null;
   onVisibility = null;
 
@@ -84,10 +84,10 @@ export default class CryptoTicker extends Component {
       return;
     }
 
-    if (okxCache) {
-      this.okxSymbols = okxCache;
+    if (exchangeCache) {
+      this.exchangeSymbols = exchangeCache;
     } else {
-      this.loadOkxSymbols();
+      this.loadExchanges();
     }
 
     if (priceCache.data && Date.now() - priceCache.at < REFRESH_SECONDS * 1000) {
@@ -178,10 +178,16 @@ export default class CryptoTicker extends Component {
   }
 
   get stockSymbols() {
-    return (this.siteSettings.crypto_ticker_stocks || "")
+    const configured = (this.siteSettings.crypto_ticker_stocks || "")
       .split(/[,\s]+/)
       .map((symbol) => symbol.trim())
       .filter(Boolean);
+
+    if (configured.length) {
+      return configured;
+    }
+
+    return this.preview ? ["AAPL", "MSFT", "^GSPC", "^IXIC", "^DJI"] : [];
   }
 
   get rows() {
@@ -194,18 +200,20 @@ export default class CryptoTicker extends Component {
       return [];
     }
 
-    return this.prices.map((coin) => {
-      const change = coin?.price_change_percentage_24h;
-      const hasChange = typeof change === "number";
-      const symbol = (coin?.symbol || "").toUpperCase();
-      return {
-        symbol,
-        url: this.cryptoUrl(coin, symbol),
-        price: this.formatPrice(coin?.current_price),
-        change: hasChange ? `${change >= 0 ? "+" : ""}${change.toFixed(2)}%` : "",
-        up: !hasChange || change >= 0,
-      };
-    });
+    return this.prices
+      .filter((coin) => this.listed(coin?.symbol))
+      .map((coin) => {
+        const change = coin?.price_change_percentage_24h;
+        const hasChange = typeof change === "number";
+        const symbol = (coin?.symbol || "").toUpperCase();
+        return {
+          symbol,
+          url: this.cryptoUrl(coin, symbol),
+          price: this.formatPrice(coin?.current_price),
+          change: hasChange ? `${change >= 0 ? "+" : ""}${change.toFixed(2)}%` : "",
+          up: !hasChange || change >= 0,
+        };
+      });
   }
 
   get stockRows() {
@@ -226,14 +234,26 @@ export default class CryptoTicker extends Component {
     });
   }
 
-  // Binance by default; OKX only when enabled (or in staff preview), with Binance
-  // fallback for coins not listed on OKX.
-  cryptoUrl(coin, symbol) {
-    if (!this.okxEnabled) {
-      return this.binanceUrl(coin);
+  // A coin is shown only if it is listed on OKX or Binance (once the lists load).
+  listed(symbol) {
+    const okx = this.exchangeSymbols?.okx;
+    const binance = this.exchangeSymbols?.binance;
+    if (!Array.isArray(okx) && !Array.isArray(binance)) {
+      return true;
     }
-    const onOkx = !this.okxSymbols || this.okxSymbols.includes(symbol);
-    return onOkx ? this.okxUrl(symbol) : this.binanceUrl(coin);
+    const sym = String(symbol || "").toUpperCase();
+    return (Array.isArray(okx) && okx.includes(sym)) || (Array.isArray(binance) && binance.includes(sym));
+  }
+
+  // OKX by default; Binance only when the coin is not listed on OKX.
+  cryptoUrl(coin, symbol) {
+    const sym = String(symbol || "").toUpperCase();
+    const okx = this.exchangeSymbols?.okx;
+    const onOkx = !Array.isArray(okx) || okx.includes(sym);
+    if (this.okxEnabled && onOkx) {
+      return this.okxUrl(sym);
+    }
+    return this.binanceUrl(coin);
   }
 
   async load() {
@@ -257,7 +277,7 @@ export default class CryptoTicker extends Component {
 
       let list = payload;
       if (!this.ids.length) {
-        list = list.slice(0, this.topCount);
+        list = list.slice(0, this.topCount + 10);
       }
 
       this.prices = list;
@@ -283,20 +303,23 @@ export default class CryptoTicker extends Component {
     }
   }
 
-  async loadOkxSymbols() {
+  async loadExchanges() {
     try {
-      const response = await fetch("/crypto-ticker/okx-symbols", {
+      const response = await fetch("/crypto-ticker/exchange-symbols", {
         headers: { Accept: "application/json" },
       });
       if (!response.ok) {
-        throw new Error(`okx HTTP ${response.status}`);
+        throw new Error(`exchange-symbols HTTP ${response.status}`);
       }
       const payload = await response.json();
-      okxCache = Array.isArray(payload?.symbols) ? payload.symbols : [];
+      exchangeCache = {
+        okx: Array.isArray(payload?.okx) ? payload.okx : [],
+        binance: Array.isArray(payload?.binance) ? payload.binance : [],
+      };
     } catch (error) {
-      okxCache = [];
+      exchangeCache = { okx: [], binance: [] };
     }
-    this.okxSymbols = okxCache;
+    this.exchangeSymbols = exchangeCache;
   }
 
   okxUrl(symbol) {
@@ -359,7 +382,7 @@ export default class CryptoTicker extends Component {
       const ids = this.ids.map((id) => encodeURIComponent(id)).join(",");
       return `${base}&ids=${ids}`;
     }
-    return `${base}&order=market_cap_desc&per_page=${this.topCount + 10}&page=1`;
+    return `${base}&order=market_cap_desc&per_page=${this.topCount + 20}&page=1`;
   }
 
   <template>

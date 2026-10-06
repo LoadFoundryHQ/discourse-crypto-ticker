@@ -1,4 +1,14 @@
 es:
+  admin_js:
+    admin:
+      site_settings:
+        crypto_ticker_enabled: "Activar ticker"
+        crypto_ticker_position: "Posición"
+        crypto_ticker_style: "Estilo"
+        crypto_ticker_top_count: "Número de monedas top"
+        crypto_ticker_show_change: "Mostrar cambio 24 h"
+        crypto_ticker_stocks_enabled: "Activar acciones e índices"
+        crypto_ticker_stocks: "Acciones e índices"
   js:
     crypto_ticker:
       title: "Ticker de Load Foundry"

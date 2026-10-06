@@ -1,4 +1,14 @@
 en:
+  admin_js:
+    admin:
+      site_settings:
+        crypto_ticker_enabled: "Enable ticker"
+        crypto_ticker_position: "Position"
+        crypto_ticker_style: "Style"
+        crypto_ticker_top_count: "Top coins count"
+        crypto_ticker_show_change: "Show 24h change"
+        crypto_ticker_stocks_enabled: "Enable stocks & indexes"
+        crypto_ticker_stocks: "Stocks & indexes"
   js:
     crypto_ticker:
       title: "Load Foundry Crypto Ticker"

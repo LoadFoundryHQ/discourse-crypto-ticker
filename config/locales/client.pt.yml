@@ -1,0 +1,45 @@
+pt:
+  admin_js:
+    admin:
+      site_settings:
+        crypto_ticker_enabled: "Ativar ticker"
+        crypto_ticker_position: "Posição"
+        crypto_ticker_style: "Estilo"
+        crypto_ticker_top_count: "Número de moedas principais"
+        crypto_ticker_show_change: "Mostrar variação de 24 h"
+        crypto_ticker_stocks_enabled: "Ativar ações e índices"
+        crypto_ticker_stocks: "Ações e índices"
+  js:
+    crypto_ticker:
+      title: "Ticker da Load Foundry"
+      aria_label: "Preços de criptomoedas"
+      positions:
+        header: "Abaixo do cabeçalho"
+        topic_list_top: "Acima da lista de tópicos"
+        topic_list_bottom: "Abaixo da lista de tópicos"
+        topic_top: "Topo do tópico"
+        topic_bottom: "Fim do tópico"
+        sidebar: "Barra lateral esquerda"
+      styles:
+        classic: "Clássico (faixa deslizante)"
+        dark: "Escuro (faixa deslizante)"
+        minimal: "Minimalista (plano, ajustável)"
+        cards: "Cartões (grade estática)"
+      admin:
+        picker_title: "Ticker"
+        title: "Moedas do ticker"
+        tab_crypto: "Cripto"
+        tab_stocks: "Ações"
+        tab_indexes: "Índices"
+        stocks_help: "Busque ações por símbolo ou nome e adicione-as ao ticker."
+        stocks_search: "Buscar uma ação (ex.: AAPL, Tesla…)"
+        indexes_help: "Escolha os índices exibidos no ticker."
+        none_selected: "Nada selecionado ainda."
+        searching: "Buscando…"
+        help: "Escolha as moedas exibidas no ticker. Se deixar vazio, as 10 principais por valor de mercado são exibidas automaticamente. Só é possível adicionar moedas listadas na OKX."
+        empty: "Nenhuma moeda selecionada — as 10 principais por valor de mercado serão exibidas."
+        search_placeholder: "Buscar uma moeda por símbolo ou nome…"
+        results: "Resultados"
+        save: "Salvar"
+        saving: "Salvando…"
+        saved: "Salvo! Recarregue a página para ver as alterações."

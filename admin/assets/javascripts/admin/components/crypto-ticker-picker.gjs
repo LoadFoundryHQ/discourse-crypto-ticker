@@ -1,6 +1,5 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { i18n } from "discourse-i18n";
 
 const CoinButton = <template>
   <button
@@ -37,27 +36,38 @@ const MarketBadge = <template>
 
 export default <template>
   <div class="crypto-ticker-picker">
+    <div class="crypto-ticker-picker__toolbar">
+      <label class="crypto-ticker-picker__lang">
+        <span>{{@controller.strings.language}}</span>
+        <select value={{@controller.locale}} {{on "change" @controller.setLocale}}>
+          {{#each @controller.locales as |loc|}}
+            <option value={{loc.code}}>{{loc.label}}</option>
+          {{/each}}
+        </select>
+      </label>
+    </div>
+
     <div class="crypto-ticker-picker__tabs">
       <button
         type="button"
         class="btn {{if (eq @controller.tab 'crypto') 'btn-primary'}}"
         {{on "click" (fn @controller.setTab "crypto")}}
-      >{{i18n "crypto_ticker.admin.tab_crypto"}}</button>
+      >{{@controller.strings.tab_crypto}}</button>
       <button
         type="button"
         class="btn {{if (eq @controller.tab 'stocks') 'btn-primary'}}"
         {{on "click" (fn @controller.setTab "stocks")}}
-      >{{i18n "crypto_ticker.admin.tab_stocks"}}</button>
+      >{{@controller.strings.tab_stocks}}</button>
       <button
         type="button"
         class="btn {{if (eq @controller.tab 'indexes') 'btn-primary'}}"
         {{on "click" (fn @controller.setTab "indexes")}}
-      >{{i18n "crypto_ticker.admin.tab_indexes"}}</button>
+      >{{@controller.strings.tab_indexes}}</button>
     </div>
 
     {{#if (eq @controller.tab "crypto")}}
       <p class="crypto-ticker-picker__help">
-        {{i18n "crypto_ticker.admin.help"}}
+        {{@controller.strings.help}}
       </p>
 
       <div class="crypto-ticker-picker__selected">
@@ -77,11 +87,11 @@ export default <template>
             class="btn btn-small crypto-ticker-picker__clear"
             {{on "click" @controller.clear}}
           >
-            {{i18n "crypto_ticker.admin.empty"}}
+            {{@controller.strings.empty}}
           </button>
         {{else}}
           <span class="crypto-ticker-picker__empty">
-            {{i18n "crypto_ticker.admin.empty"}}
+            {{@controller.strings.empty}}
           </span>
         {{/if}}
       </div>
@@ -89,7 +99,7 @@ export default <template>
       <input
         type="search"
         class="crypto-ticker-picker__search"
-        placeholder={{i18n "crypto_ticker.admin.search_placeholder"}}
+        placeholder={{@controller.strings.search_placeholder}}
         value={{@controller.query}}
         {{on "input" @controller.updateQuery}}
       />
@@ -101,7 +111,7 @@ export default <template>
       </div>
     {{else if (eq @controller.tab "stocks")}}
       <p class="crypto-ticker-picker__help">
-        {{i18n "crypto_ticker.admin.stocks_help"}}
+        {{@controller.strings.stocks_help}}
       </p>
 
       <div class="crypto-ticker-picker__selected">
@@ -111,7 +121,7 @@ export default <template>
           {{/each}}
         {{else}}
           <span class="crypto-ticker-picker__empty">
-            {{i18n "crypto_ticker.admin.none_selected"}}
+            {{@controller.strings.none_selected}}
           </span>
         {{/if}}
       </div>
@@ -119,7 +129,7 @@ export default <template>
       <input
         type="search"
         class="crypto-ticker-picker__search"
-        placeholder={{i18n "crypto_ticker.admin.stocks_search"}}
+        placeholder={{@controller.strings.stocks_search}}
         value={{@controller.stockQuery}}
         {{on "input" @controller.updateStockQuery}}
       />
@@ -127,7 +137,7 @@ export default <template>
       <div class="crypto-ticker-picker__grid">
         {{#if @controller.searching}}
           <span class="crypto-ticker-picker__empty">
-            {{i18n "crypto_ticker.admin.searching"}}
+            {{@controller.strings.searching}}
           </span>
         {{else}}
           {{#each @controller.stockResultsWithState as |item|}}
@@ -137,7 +147,7 @@ export default <template>
       </div>
     {{else}}
       <p class="crypto-ticker-picker__help">
-        {{i18n "crypto_ticker.admin.indexes_help"}}
+        {{@controller.strings.indexes_help}}
       </p>
 
       <div class="crypto-ticker-picker__selected">
@@ -147,7 +157,7 @@ export default <template>
           {{/each}}
         {{else}}
           <span class="crypto-ticker-picker__empty">
-            {{i18n "crypto_ticker.admin.none_selected"}}
+            {{@controller.strings.none_selected}}
           </span>
         {{/if}}
       </div>
@@ -167,14 +177,14 @@ export default <template>
         {{on "click" @controller.save}}
       >
         {{#if @controller.saving}}
-          {{i18n "crypto_ticker.admin.saving"}}
+          {{@controller.strings.saving}}
         {{else}}
-          {{i18n "crypto_ticker.admin.save"}}
+          {{@controller.strings.save}}
         {{/if}}
       </button>
       {{#if @controller.saved}}
         <span class="crypto-ticker-picker__saved">
-          {{i18n "crypto_ticker.admin.saved"}}
+          {{@controller.strings.saved}}
         </span>
       {{/if}}
     </div>

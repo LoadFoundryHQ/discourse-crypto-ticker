@@ -1,0 +1,9 @@
+pt:
+  site_settings:
+    crypto_ticker_enabled: "Ativa o ticker de criptomoedas da Load Foundry."
+    crypto_ticker_position: "Onde o ticker é exibido."
+    crypto_ticker_style: "Estilo visual do ticker."
+    crypto_ticker_top_count: "Quantas moedas exibir quando nenhuma está selecionada (as N principais por capitalização)."
+    crypto_ticker_show_change: "Mostrar a variação de 24 h."
+    crypto_ticker_stocks_enabled: "Mostrar também ações e índices (Yahoo Finance)."
+    crypto_ticker_stocks: "Símbolos do Yahoo Finance para ações e índices (ex.: AAPL, MSFT, ^GSPC)."

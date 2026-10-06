@@ -5,6 +5,83 @@ import { later } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
+const STORAGE_KEY = "cryptoTickerPickerLocale";
+
+export const PICKER_LOCALES = [
+  { code: "en", label: "English" },
+  { code: "es", label: "Español" },
+  { code: "pt", label: "Português" },
+];
+
+const PICKER_I18N = {
+  en: {
+    language: "Language",
+    tab_crypto: "Crypto",
+    tab_stocks: "Stocks",
+    tab_indexes: "Indexes",
+    help: "Choose the coins shown in the ticker. If you leave it empty, the top 10 by market capitalization are shown automatically. Only coins listed on OKX can be added.",
+    empty: "No coins selected — the top 10 by market cap will be shown.",
+    search_placeholder: "Search a coin by symbol or name…",
+    none_selected: "Nothing selected yet.",
+    stocks_help: "Search for stocks by symbol or name and add them to the ticker.",
+    stocks_search: "Search a stock (e.g. AAPL, Tesla…)",
+    indexes_help: "Pick the indexes shown in the ticker.",
+    searching: "Searching…",
+    save: "Save",
+    saving: "Saving…",
+    saved: "Saved! Reload the page to see the changes.",
+  },
+  es: {
+    language: "Idioma",
+    tab_crypto: "Cripto",
+    tab_stocks: "Acciones",
+    tab_indexes: "Índices",
+    help: "Elige las monedas que se muestran en el ticker. Si lo dejas vacío, se muestran automáticamente las 10 principales por capitalización. Solo se pueden añadir monedas listadas en OKX.",
+    empty: "Sin monedas seleccionadas — se mostrarán las 10 principales por capitalización.",
+    search_placeholder: "Busca una moneda por símbolo o nombre…",
+    none_selected: "Nada seleccionado todavía.",
+    stocks_help: "Busca acciones por símbolo o nombre y añádelas al ticker.",
+    stocks_search: "Busca una acción (p. ej. AAPL, Tesla…)",
+    indexes_help: "Elige los índices que se muestran en el ticker.",
+    searching: "Buscando…",
+    save: "Guardar",
+    saving: "Guardando…",
+    saved: "¡Guardado! Recarga la página para ver los cambios.",
+  },
+  pt: {
+    language: "Idioma",
+    tab_crypto: "Cripto",
+    tab_stocks: "Ações",
+    tab_indexes: "Índices",
+    help: "Escolha as moedas exibidas no ticker. Se deixar vazio, as 10 principais por valor de mercado são exibidas automaticamente. Só é possível adicionar moedas listadas na OKX.",
+    empty: "Nenhuma moeda selecionada — as 10 principais por valor de mercado serão exibidas.",
+    search_placeholder: "Buscar uma moeda por símbolo ou nome…",
+    none_selected: "Nada selecionado ainda.",
+    stocks_help: "Busque ações por símbolo ou nome e adicione-as ao ticker.",
+    stocks_search: "Buscar uma ação (ex.: AAPL, Tesla…)",
+    indexes_help: "Escolha os índices exibidos no ticker.",
+    searching: "Buscando…",
+    save: "Salvar",
+    saving: "Salvando…",
+    saved: "Salvo! Recarregue a página para ver as alterações.",
+  },
+};
+
+function initialLocale() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored && PICKER_I18N[stored]) {
+      return stored;
+    }
+  } catch (e) {
+    // ignore
+  }
+  const html = (document.documentElement.getAttribute("lang") || "en")
+    .slice(0, 2)
+    .toLowerCase();
+  return PICKER_I18N[html] ? html : "en";
+}
+
 export default class CryptoTickerPickerController extends Controller {
   @tracked allCoins = [];
   @tracked topCoins = [];
@@ -18,8 +95,15 @@ export default class CryptoTickerPickerController extends Controller {
   @tracked searching = false;
 
   @tracked tab = "crypto";
+  @tracked locale = initialLocale();
   @tracked saving = false;
   @tracked saved = false;
+
+  locales = PICKER_LOCALES;
+
+  get strings() {
+    return PICKER_I18N[this.locale] || PICKER_I18N.en;
+  }
 
   get results() {
     const term = this.query.trim().toLowerCase();
@@ -71,6 +155,16 @@ export default class CryptoTickerPickerController extends Controller {
 
   get stockSelectedCount() {
     return this.selectedStocks.length;
+  }
+
+  @action
+  setLocale(event) {
+    this.locale = event.target.value;
+    try {
+      localStorage.setItem(STORAGE_KEY, this.locale);
+    } catch (e) {
+      // ignore
+    }
   }
 
   @action

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.0
+
+- **Language selector in the admin picker** (English / Español / Português): switch the plugin UI language on the spot, no need to change your Discourse interface language. The choice is remembered.
+- **Localized settings**: descriptions for the plugin site settings (Position, Style, Top count, Show change, Stocks & indexes…) now available in **Spanish and Portuguese** (`server.es.yml`, `server.pt.yml`), plus setting titles and full `client.pt.yml`.
+
 ## 1.3.0
 
 - **Admin picker with tabs** (Cripto / Acciones / Índices): choose everything from the UI, no need to type symbols.

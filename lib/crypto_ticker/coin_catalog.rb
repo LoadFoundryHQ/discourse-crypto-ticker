@@ -3,8 +3,7 @@
 module CryptoTicker
   class CoinCatalog
     COINGECKO_MARKETS_URL = "https://api.coingecko.com/api/v3/coins/markets"
-    BINANCE_PRODUCTS_URL =
-      "https://www.binance.com/bapi/asset/v2/public/asset-service/product/get-products"
+    OKX_INSTRUMENTS_URL = "https://www.okx.com/api/v5/public/instruments"
     CACHE_KEY = "crypto_ticker:coin_catalog"
     CACHE_TTL = 6.hours
     MARKET_LIMIT = 250
@@ -34,7 +33,7 @@ module CryptoTicker
 
     def build_catalog
       markets = coingecko_markets
-      symbols = binance_symbols
+      symbols = okx_symbols
       return markets if symbols.empty?
 
       markets.select { |coin| symbols.key?(coin["symbol"]) }
@@ -61,14 +60,17 @@ module CryptoTicker
       end
     end
 
-    def binance_symbols
-      data = get_json(BINANCE_PRODUCTS_URL)
+    def okx_symbols
+      data = get_json(OKX_INSTRUMENTS_URL, instType: "SPOT")
       products = data.is_a?(Hash) ? data["data"] : nil
       return {} unless products.is_a?(Array)
 
       products.each_with_object({}) do |product, memo|
-        symbol = product["b"].to_s.upcase
-        memo[symbol] = true if symbol.present?
+        next unless product["quoteCcy"].to_s == "USDT"
+        next unless product["state"].to_s == "live"
+
+        base = product["baseCcy"].to_s.upcase
+        memo[base] = true if base.present?
       end
     end
 

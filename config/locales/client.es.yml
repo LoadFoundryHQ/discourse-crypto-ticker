@@ -18,7 +18,7 @@ es:
       admin:
         picker_title: "Monedas"
         title: "Monedas del ticker"
-        help: "Elige las monedas que se muestran en el ticker. Si lo dejas vacío, se muestran automáticamente las 10 principales por capitalización. Solo se pueden añadir monedas listadas en Binance."
+        help: "Elige las monedas que se muestran en el ticker. Si lo dejas vacío, se muestran automáticamente las 10 principales por capitalización. Solo se pueden añadir monedas listadas en OKX."
         empty: "Sin monedas seleccionadas — se mostrarán las 10 principales por capitalización."
         search_placeholder: "Busca una moneda por símbolo o nombre…"
         results: "Resultados"

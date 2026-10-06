@@ -18,7 +18,7 @@ en:
       admin:
         picker_title: "Coins"
         title: "Ticker coins"
-        help: "Choose the coins shown in the ticker. If you leave it empty, the top 10 by market capitalization are shown automatically. Only coins listed on Binance can be added."
+        help: "Choose the coins shown in the ticker. If you leave it empty, the top 10 by market capitalization are shown automatically. Only coins listed on OKX can be added."
         empty: "No coins selected — the top 10 by market cap will be shown."
         search_placeholder: "Search a coin by symbol or name…"
         results: "Results"

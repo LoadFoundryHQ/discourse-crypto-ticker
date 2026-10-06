@@ -50,6 +50,18 @@ const BINANCE_SLUGS = {
   ZEC: "zcash",
 };
 
+// TradingView symbol overrides for common indexes (Yahoo symbol -> TradingView symbol).
+const TV_SYMBOLS = {
+  "^GSPC": "SPX",
+  "^IXIC": "IXIC",
+  "^DJI": "DJI",
+  "^FTSE": "UKX",
+  "^N225": "NI225",
+  "^GDAXI": "DAX",
+  "^FCHI": "CAC40",
+  "^IBEX": "IBEX35",
+};
+
 // Shared caches (per tab) so the ticker doesn't re-fetch on every navigation
 // when it is rendered inside the router outlet (list/topic positions).
 let priceCache = { at: 0, data: null };
@@ -149,16 +161,20 @@ export default class CryptoTicker extends Component {
     return parseInt(this.siteSettings.crypto_ticker_top_count, 10) || 10;
   }
 
-  get stocksEnabled() {
-    if (this.siteSettings.crypto_ticker_stocks_enabled) {
-      return true;
-    }
-    // Staff-only preview via ?crypto_ticker_preview=stocks (no need to toggle the setting).
+  get preview() {
     return (
       !!this.currentUser?.staff &&
       typeof window !== "undefined" &&
       window.location.search.includes("crypto_ticker_preview")
     );
+  }
+
+  get okxEnabled() {
+    return this.siteSettings.crypto_ticker_okx_enabled || this.preview;
+  }
+
+  get stocksEnabled() {
+    return this.siteSettings.crypto_ticker_stocks_enabled || this.preview;
   }
 
   get stockSymbols() {
@@ -210,8 +226,12 @@ export default class CryptoTicker extends Component {
     });
   }
 
-  // OKX by default; Binance only when the coin is NOT listed on OKX.
+  // Binance by default; OKX only when enabled (or in staff preview), with Binance
+  // fallback for coins not listed on OKX.
   cryptoUrl(coin, symbol) {
+    if (!this.okxEnabled) {
+      return this.binanceUrl(coin);
+    }
     const onOkx = !this.okxSymbols || this.okxSymbols.includes(symbol);
     return onOkx ? this.okxUrl(symbol) : this.binanceUrl(coin);
   }
@@ -309,10 +329,11 @@ export default class CryptoTicker extends Component {
   }
 
   tvSymbol(symbol) {
-    return String(symbol)
-      .replace(/^\^/, "")
-      .replace(/\.(us|uk|de|jp|hk)$/i, "")
-      .toUpperCase();
+    const raw = String(symbol).toUpperCase();
+    if (TV_SYMBOLS[raw]) {
+      return TV_SYMBOLS[raw];
+    }
+    return raw.replace(/^\^/, "").replace(/\.(us|uk|de|jp|hk)$/i, "");
   }
 
   tvUrl(symbol) {

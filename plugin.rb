@@ -2,7 +2,7 @@
 
 # name: discourse-crypto-ticker
 # about: Load Foundry Crypto Ticker — a cryptocurrency price ticker with 6 positions, 4 styles and a coin picker.
-# version: 1.1.0
+# version: 1.1.1
 # authors: Load Foundry (originally by BitForo)
 # url: https://github.com/LoadFoundryHQ/discourse-crypto-ticker
 # required_version: 3.2.0
@@ -33,7 +33,7 @@ after_initialize do
       put "/coins" => "crypto_ticker/admin#update"
     end
 
-    # Public proxy for stocks/indexes quotes (Stooq).
+    # Public proxy for stocks/indexes quotes (Yahoo Finance).
     get "/crypto-ticker/quotes" => "crypto_ticker/quotes#index", defaults: { format: :json }
     # OKX-listed base currencies (to pick OKX vs Binance link).
     get "/crypto-ticker/okx-symbols" => "crypto_ticker/symbols#okx", defaults: { format: :json }

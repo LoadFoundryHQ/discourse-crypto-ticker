@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
+require "cgi"
+
 module CryptoTicker
-  # Server-side quotes for stocks and indexes via Stooq (no API key, no CORS).
+  # Server-side quotes for stocks and indexes via Yahoo Finance (no API key, no CORS).
   class Quotes
-    STOOQ_URL = "https://stooq.com/q/l/"
+    YAHOO_URL = "https://query1.finance.yahoo.com/v8/finance/chart/"
     CACHE_TTL = 60.seconds
     MAX_SYMBOLS = 50
-    USER_AGENT = "Mozilla/5.0 (compatible; DiscourseCryptoTicker/1.0)"
+    USER_AGENT = "Mozilla/5.0 (compatible; DiscourseCryptoTicker/1.1)"
     SYMBOL = /\A[\^a-z0-9.\-]{1,20}\z/i
 
     def self.clean_symbols(raw)
@@ -42,9 +44,9 @@ module CryptoTicker
     def fetch(symbol)
       response =
         Excon.get(
-          STOOQ_URL,
-          query: { s: symbol, f: "sd2t2ohlcv", h: "", e: "csv" },
-          headers: { "User-Agent" => USER_AGENT },
+          "#{YAHOO_URL}#{CGI.escape(symbol)}",
+          query: { interval: "1d", range: "1d" },
+          headers: { "Accept" => "application/json", "User-Agent" => USER_AGENT },
           connect_timeout: 5,
           read_timeout: 10,
           idempotent: true,
@@ -54,38 +56,26 @@ module CryptoTicker
       parse(response.body, symbol)
     rescue StandardError => e
       Rails.logger.warn(
-        "discourse-crypto-ticker: stooq #{symbol} failed (#{e.class}: #{e.message})",
+        "discourse-crypto-ticker: yahoo #{symbol} failed (#{e.class}: #{e.message})",
       )
       nil
     end
 
     def parse(body, symbol)
-      lines = body.to_s.split(/\r?\n/).reject(&:empty?)
-      return nil if lines.size < 2
+      data = JSON.parse(body)
+      meta = data.dig("chart", "result", 0, "meta")
+      return nil unless meta.is_a?(Hash)
 
-      # Stooq CSV header: Symbol,Date,Time,Open,High,Low,Close,Volume
-      values = lines[1].split(",")
-      return nil if values.size < 8
-
-      open = to_f(values[3])
-      close = to_f(values[6])
-      return nil if close.nil? || close.zero?
-
-      change = (open && !open.zero?) ? ((close - open) / open) * 100.0 : nil
+      price = meta["regularMarketPrice"]
+      return nil if price.nil?
 
       {
         symbol: symbol,
-        name: symbol,
-        price: close,
-        change: change,
+        name: meta["shortName"] || meta["symbol"] || symbol,
+        price: price.to_f,
+        change: meta["regularMarketChangePercent"],
         kind: symbol.start_with?("^") ? "index" : "stock",
       }
-    end
-
-    def to_f(value)
-      Float(value)
-    rescue StandardError
-      nil
     end
   end
 end

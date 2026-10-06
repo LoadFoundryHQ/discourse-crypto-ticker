@@ -28,6 +28,9 @@ plugins:
   crypto_ticker_stocks:
     default: ""
     client: true
+  crypto_ticker_okx_enabled:
+    default: false
+    client: true
   crypto_ticker_okx_aff:
     default: "DISCOURSE"
     client: true

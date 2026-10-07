@@ -33,6 +33,7 @@ es:
         cards: "Tarjetas (cuadrícula estática)"
       admin:
         picker_title: "Ticker"
+        nav_settings: "Ajustes"
         title: "Monedas del ticker"
         tab_crypto: "Cripto"
         tab_stocks: "Acciones"

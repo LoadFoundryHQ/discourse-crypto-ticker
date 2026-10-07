@@ -74,6 +74,35 @@ module CryptoTicker
       render json: { results: results || [] }
     end
 
+    def settings
+      render json: {
+        "enabled" => SiteSetting.crypto_ticker_enabled,
+        "position" => SiteSetting.crypto_ticker_position,
+        "style" => SiteSetting.crypto_ticker_style,
+        "language" => SiteSetting.crypto_ticker_language,
+        "top_count" => SiteSetting.crypto_ticker_top_count,
+      }
+    end
+
+    def update_settings
+      enabled = ActiveModel::Type::Boolean.new.cast(params[:enabled])
+      SiteSetting.crypto_ticker_enabled = enabled unless enabled.nil?
+
+      position = params[:position].to_s
+      SiteSetting.crypto_ticker_position = position if PositionSetting.valid_value?(position)
+
+      style = params[:style].to_s
+      SiteSetting.crypto_ticker_style = style if StyleSetting.valid_value?(style)
+
+      language = params[:language].to_s
+      SiteSetting.crypto_ticker_language = language if LanguageSetting.valid_value?(language)
+
+      top_count = params[:top_count].to_i
+      SiteSetting.crypto_ticker_top_count = top_count if top_count.positive?
+
+      render json: { "ok" => true }
+    end
+
     private
 
     def selected_stocks

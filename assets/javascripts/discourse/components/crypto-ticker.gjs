@@ -179,7 +179,7 @@ export default class CryptoTicker extends Component {
 
   get stockSymbols() {
     const configured = (this.siteSettings.crypto_ticker_stocks || "")
-      .split(/[,\s]+/)
+      .split(/[|,\s]+/)
       .map((symbol) => symbol.trim())
       .filter(Boolean);
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.7.0
+
+- **Custom "Settings" page** inside the plugin (own tab, **fully translated including titles**): enable ticker, position, style, language and top count. The native (English-titled) site settings are hidden from the panel.
+- **Fixed** stocks/indexes not showing in the ticker: the picker saves them pipe-separated (`|`); the ticker now splits on `|` too.
+
 ## 1.6.1
 
 - **Fixed**: the admin bundle failed to load because it imported `inject` from `@ember/service` (removed in Ember 7). Now imports `service`. This is why the admin tabs rendered blank.

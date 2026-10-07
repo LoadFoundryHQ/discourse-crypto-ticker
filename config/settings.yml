@@ -2,21 +2,25 @@ plugins:
   crypto_ticker_enabled:
     default: true
     client: true
+    hidden: true
   crypto_ticker_position:
     default: below-site-header
     type: enum
     enum: "CryptoTicker::PositionSetting"
     client: true
+    hidden: true
   crypto_ticker_style:
     default: classic
     type: enum
     enum: "CryptoTicker::StyleSetting"
     client: true
+    hidden: true
   crypto_ticker_language:
     default: auto
     type: enum
     enum: "CryptoTicker::LanguageSetting"
     client: true
+    hidden: true
   crypto_ticker_coins:
     default: ""
     client: true
@@ -24,6 +28,7 @@ plugins:
   crypto_ticker_top_count:
     default: 10
     client: true
+    hidden: true
   crypto_ticker_show_change:
     default: true
     client: true

@@ -33,6 +33,7 @@ pt:
         cards: "Cartões (grade estática)"
       admin:
         picker_title: "Ticker"
+        nav_settings: "Ajustes"
         title: "Moedas do ticker"
         tab_crypto: "Cripto"
         tab_stocks: "Ações"

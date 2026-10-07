@@ -15,6 +15,11 @@ export default {
       api.setAdminPluginIcon(PLUGIN_ID, "coins");
       api.addAdminPluginConfigurationNav(PLUGIN_ID, [
         {
+          label: "crypto_ticker.admin.nav_settings",
+          route: "adminPlugins.show.crypto-ticker-settings",
+          icon: "gear",
+        },
+        {
           label: "crypto_ticker.admin.tab_crypto",
           route: "adminPlugins.show.crypto-ticker-coins",
           icon: "coins",

@@ -33,6 +33,7 @@ en:
         cards: "Cards (static grid)"
       admin:
         picker_title: "Ticker"
+        nav_settings: "Settings"
         title: "Ticker coins"
         tab_crypto: "Crypto"
         tab_stocks: "Stocks"

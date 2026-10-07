@@ -2,7 +2,7 @@
 
 # name: discourse-crypto-ticker
 # about: Load Foundry Crypto Ticker — a cryptocurrency price ticker with 6 positions, 4 styles and a coin picker.
-# version: 1.6.1
+# version: 1.7.0
 # authors: Load Foundry (originally by BitForo)
 # url: https://github.com/LoadFoundryHQ/discourse-crypto-ticker
 # required_version: 3.2.0
@@ -35,6 +35,8 @@ after_initialize do
       put "/coins" => "crypto_ticker/admin#update"
       put "/stocks" => "crypto_ticker/admin#update_stocks"
       get "/search" => "crypto_ticker/admin#search"
+      get "/config" => "crypto_ticker/admin#settings"
+      put "/config" => "crypto_ticker/admin#update_settings"
     end
 
     # Full-page loads of the admin tabs render the admin SPA (so a hard refresh
@@ -42,7 +44,7 @@ after_initialize do
     get "/admin/plugins/:plugin_id/crypto-ticker/:section" => "admin/plugins#show",
         constraints: {
           plugin_id: "discourse-crypto-ticker",
-          section: /coins|stocks|indexes/,
+          section: /coins|stocks|indexes|settings/,
         }
 
     # Public proxy for stocks/indexes quotes (Yahoo Finance).

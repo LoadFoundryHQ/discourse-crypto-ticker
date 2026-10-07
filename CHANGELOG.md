@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.1
+
+- **Fixed the admin picker route** (`Ticker` tab was blank / 404): the route map must live under `assets/javascripts/discourse/` so Discourse registers it as `discourse/…-route-map`.
+
 ## 1.5.0
 
 - **Language is now a plugin setting** (`crypto_ticker_language`, in Admin → Settings → Plugins): `Automatic (user's language)`, `English`, `Español` or `Português`. It drives the language of the plugin's options and its coin/stock/index picker.

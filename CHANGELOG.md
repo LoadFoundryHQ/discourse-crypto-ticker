@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.3
+
+- Fixed hiding the native (empty) "Settings" tab: target the tab element (`.admin-plugin-config-page__top-nav-item`), not the config area.
+
 ## 1.7.2
 
 - Settings: removed "Top coins count" (not shown). The ticker keeps a sensible default of 10 when no coins are chosen.

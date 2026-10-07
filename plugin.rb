@@ -2,7 +2,7 @@
 
 # name: discourse-crypto-ticker
 # about: Load Foundry Crypto Ticker — a cryptocurrency price ticker with 6 positions, 4 styles and a coin picker.
-# version: 1.7.2
+# version: 1.7.3
 # authors: Load Foundry (originally by BitForo)
 # url: https://github.com/LoadFoundryHQ/discourse-crypto-ticker
 # required_version: 3.2.0

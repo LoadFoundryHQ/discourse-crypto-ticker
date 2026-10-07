@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.1
+
+- **Fixed**: the admin bundle failed to load because it imported `inject` from `@ember/service` (removed in Ember 7). Now imports `service`. This is why the admin tabs rendered blank.
+
 ## 1.6.0
 
 - Admin UI split into **independent tabs**: **Coins**, **Stocks** and **Indexes** now appear next to the automatic **Settings** tab (no more a single "Ticker" page with sub-tabs).

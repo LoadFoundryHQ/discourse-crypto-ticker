@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.4
+
+- Hide the native (empty) "Settings" tab via an initializer that runs on each admin route change (the tab has no `href`, so CSS alone did not work). Only the plugin's own translated "Settings" tab remains.
+
 ## 1.7.3
 
 - Fixed hiding the native (empty) "Settings" tab: target the tab element (`.admin-plugin-config-page__top-nav-item`), not the config area.

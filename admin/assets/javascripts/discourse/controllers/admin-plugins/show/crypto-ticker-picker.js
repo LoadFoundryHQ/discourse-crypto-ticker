@@ -66,6 +66,7 @@ function interfaceLocale() {
 
 export default class CryptoTickerPickerController extends Controller {
   @service siteSettings;
+  @service router;
 
   @tracked allCoins = [];
   @tracked topCoins = [];
@@ -78,9 +79,19 @@ export default class CryptoTickerPickerController extends Controller {
   @tracked stockResults = [];
   @tracked searching = false;
 
-  @tracked tab = "crypto";
   @tracked saving = false;
   @tracked saved = false;
+
+  get section() {
+    const name = this.router?.currentRouteName || "";
+    if (name.endsWith("crypto-ticker-stocks")) {
+      return "stocks";
+    }
+    if (name.endsWith("crypto-ticker-indexes")) {
+      return "indexes";
+    }
+    return "crypto";
+  }
 
   get locale() {
     const setting = this.siteSettings.crypto_ticker_language;
@@ -144,12 +155,6 @@ export default class CryptoTickerPickerController extends Controller {
 
   get stockSelectedCount() {
     return this.selectedStocks.length;
-  }
-
-  @action
-  setTab(tab) {
-    this.tab = tab;
-    this.saved = false;
   }
 
   @action

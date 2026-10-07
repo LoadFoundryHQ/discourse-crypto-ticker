@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.0
+
+- Admin UI split into **independent tabs**: **Coins**, **Stocks** and **Indexes** now appear next to the automatic **Settings** tab (no more a single "Ticker" page with sub-tabs).
+- Added a server-side fallback so a hard refresh on an admin tab renders the SPA instead of 404.
+
 ## 1.5.1
 
 - **Fixed the admin picker route** (`Ticker` tab was blank / 404): the route map must live under `assets/javascripts/discourse/` so Discourse registers it as `discourse/…-route-map`.

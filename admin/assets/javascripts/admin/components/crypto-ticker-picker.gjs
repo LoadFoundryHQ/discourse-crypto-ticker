@@ -36,25 +36,7 @@ const MarketBadge = <template>
 
 export default <template>
   <div class="crypto-ticker-picker">
-    <div class="crypto-ticker-picker__tabs">
-      <button
-        type="button"
-        class="btn {{if (eq @controller.tab 'crypto') 'btn-primary'}}"
-        {{on "click" (fn @controller.setTab "crypto")}}
-      >{{@controller.strings.tab_crypto}}</button>
-      <button
-        type="button"
-        class="btn {{if (eq @controller.tab 'stocks') 'btn-primary'}}"
-        {{on "click" (fn @controller.setTab "stocks")}}
-      >{{@controller.strings.tab_stocks}}</button>
-      <button
-        type="button"
-        class="btn {{if (eq @controller.tab 'indexes') 'btn-primary'}}"
-        {{on "click" (fn @controller.setTab "indexes")}}
-      >{{@controller.strings.tab_indexes}}</button>
-    </div>
-
-    {{#if (eq @controller.tab "crypto")}}
+    {{#if (eq @controller.section "crypto")}}
       <p class="crypto-ticker-picker__help">
         {{@controller.strings.help}}
       </p>
@@ -98,7 +80,7 @@ export default <template>
           <CoinButton @item={{coin}} @controller={{@controller}} />
         {{/each}}
       </div>
-    {{else if (eq @controller.tab "stocks")}}
+    {{else if (eq @controller.section "stocks")}}
       <p class="crypto-ticker-picker__help">
         {{@controller.strings.stocks_help}}
       </p>

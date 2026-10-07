@@ -127,7 +127,6 @@ export default class CryptoTickerSettingsController extends Controller {
   @tracked position = "below-site-header";
   @tracked style = "classic";
   @tracked language = "auto";
-  @tracked topCount = 10;
   @tracked saving = false;
   @tracked saved = false;
 
@@ -188,12 +187,6 @@ export default class CryptoTickerSettingsController extends Controller {
   }
 
   @action
-  updateTopCount(event) {
-    this.topCount = event.target.value;
-    this.saved = false;
-  }
-
-  @action
   async save() {
     this.saving = true;
     try {
@@ -204,7 +197,6 @@ export default class CryptoTickerSettingsController extends Controller {
           position: this.position,
           style: this.style,
           language: this.language,
-          top_count: this.topCount,
         },
       });
       this.saved = true;

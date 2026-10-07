@@ -12,7 +12,6 @@ export default class CryptoTickerSettingsRoute extends Route {
       position: model.position,
       style: model.style,
       language: model.language,
-      topCount: model.top_count,
     });
   }
 }

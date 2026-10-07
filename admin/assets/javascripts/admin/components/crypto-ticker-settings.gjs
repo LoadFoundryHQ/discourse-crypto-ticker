@@ -62,20 +62,6 @@ export default <template>
       </select>
     </div>
 
-    <div class="crypto-ticker-settings__row">
-      <label class="crypto-ticker-settings__label" for="ct-top">
-        {{@controller.strings.top_count}}
-      </label>
-      <input
-        id="ct-top"
-        type="number"
-        min="1"
-        max="50"
-        value={{@controller.topCount}}
-        {{on "input" @controller.updateTopCount}}
-      />
-    </div>
-
     <div class="crypto-ticker-settings__actions">
       <button
         type="button"

@@ -9,6 +9,8 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 const PICKER_I18N = {
   en: {
     tab_crypto: "Crypto",
+    top10: "Top 10",
+    top20: "Top 20",
     tab_stocks: "Stocks",
     tab_indexes: "Indexes",
     help: "Choose the coins shown in the ticker. If you leave it empty, the top 10 by market capitalization are shown automatically. Only coins listed on OKX can be added.",
@@ -25,6 +27,8 @@ const PICKER_I18N = {
   },
   es: {
     tab_crypto: "Cripto",
+    top10: "Top 10",
+    top20: "Top 20",
     tab_stocks: "Acciones",
     tab_indexes: "Índices",
     help: "Elige las monedas que se muestran en el ticker. Si lo dejas vacío, se muestran automáticamente las 10 principales por capitalización. Solo se pueden añadir monedas listadas en OKX.",
@@ -41,6 +45,8 @@ const PICKER_I18N = {
   },
   pt: {
     tab_crypto: "Cripto",
+    top10: "Top 10",
+    top20: "Top 20",
     tab_stocks: "Ações",
     tab_indexes: "Índices",
     help: "Escolha as moedas exibidas no ticker. Se deixar vazio, as 10 principais por valor de mercado são exibidas automaticamente. Só é possível adicionar moedas listadas na OKX.",
@@ -177,6 +183,12 @@ export default class CryptoTickerPickerController extends Controller {
   clear() {
     this.saved = false;
     this.selectedIds = [];
+  }
+
+  @action
+  selectTop(count) {
+    this.saved = false;
+    this.selectedIds = this.topCoins.slice(0, count).map((coin) => coin.id);
   }
 
   @action

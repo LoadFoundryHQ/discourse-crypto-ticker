@@ -41,6 +41,19 @@ export default <template>
         {{@controller.strings.help}}
       </p>
 
+      <div class="crypto-ticker-picker__quick">
+        <button
+          type="button"
+          class="btn btn-small"
+          {{on "click" (fn @controller.selectTop 10)}}
+        >{{@controller.strings.top10}}</button>
+        <button
+          type="button"
+          class="btn btn-small"
+          {{on "click" (fn @controller.selectTop 20)}}
+        >{{@controller.strings.top20}}</button>
+      </div>
+
       <div class="crypto-ticker-picker__selected">
         {{#if @controller.selectedCoins.length}}
           {{#each @controller.selectedCoins as |coin|}}

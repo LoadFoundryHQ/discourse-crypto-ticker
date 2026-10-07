@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.7.2
+
+- Settings: removed "Top coins count" (not shown). The ticker keeps a sensible default of 10 when no coins are chosen.
+- Coins tab: added **Top 10** / **Top 20** quick-select buttons; the **top 10 are preselected** by default and the admin can deselect them.
+
 ## 1.7.1
 
 - Hide the native (empty) "Settings" tab so only the plugin's own fully-translated "Settings" tab shows.

@@ -106,6 +106,13 @@
   }
 }
 
+// Discourse always prepends its own "change settings" tab (native, empty here
+// because our settings are hidden). We provide our own fully-translated
+// "Settings" tab, so hide the native one for this plugin.
+.admin-plugin-config-area a[href$="/discourse-crypto-ticker/settings"] {
+  display: none;
+}
+
 .crypto-ticker-settings {
   max-width: 640px;
 

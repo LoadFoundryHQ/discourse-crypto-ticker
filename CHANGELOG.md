@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.1
+
+- Hide the native (empty) "Settings" tab so only the plugin's own fully-translated "Settings" tab shows.
+
 ## 1.7.0
 
 - **Custom "Settings" page** inside the plugin (own tab, **fully translated including titles**): enable ticker, position, style, language and top count. The native (English-titled) site settings are hidden from the panel.

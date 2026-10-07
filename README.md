@@ -11,8 +11,6 @@ A **Load Foundry** plugin for Discourse that adds a **cryptocurrency price ticke
 - **Coins**: quick-select **Top 10** / **Top 20**, or search by symbol or name.
 - Fully responsive; scrolling styles pause on hover.
 
-> Formerly `bitforo/discourse-crypto-ticker`. The repository moved to **Load Foundry**; the old URL redirects, so existing installs keep working.
-
 ## Screenshots
 
 ![Admin · Settings](screenshots/settings-en.png)
@@ -86,4 +84,4 @@ Most options are managed from the plugin's **Settings** tab. Advanced/hidden set
 
 ## License
 
-MIT — see [LICENSE](LICENSE). Based on the original work by **BitForo**; rebranded and maintained by **Load Foundry**.
+MIT — see [LICENSE](LICENSE). © Load Foundry.

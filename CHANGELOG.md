@@ -76,4 +76,4 @@
 
 ## 0.4.0
 
-- Previous release under the original `bitforo/discourse-crypto-ticker` repository.
+- Previous release.
